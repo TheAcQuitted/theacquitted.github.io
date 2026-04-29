@@ -3,75 +3,98 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>The AcQuitted Private Fan Player</title>
+  <title>The AcQuitted Jukebox</title>
   <script src="https://w.soundcloud.com/player/api.js"></script>
   <style>
     body { 
-      font-family: system-ui, sans-serif; 
-      background: #0a0a0a; 
-      color: #fff; 
+      font-family: 'Courier New', monospace; 
+      background: #1a0f08; 
+      color: #ffd700; 
       margin: 0; 
       padding: 20px; 
+      background-image: linear-gradient(#2c1e14, #1a0f08);
     }
-    #custom-player { 
-      max-width: 600px; 
+    #jukebox { 
+      max-width: 620px; 
       margin: 20px auto; 
-      background: #111; 
-      border-radius: 16px; 
-      overflow: hidden; 
-      box-shadow: 0 10px 30px rgba(255, 60, 0, 0.4); 
+      background: linear-gradient(#c0c0c0, #808080); 
+      border: 12px solid #333; 
+      border-radius: 20px; 
+      box-shadow: 0 20px 40px rgba(0,0,0,0.9), inset 0 0 60px rgba(255,215,0,0.3);
+      overflow: hidden;
+      position: relative;
     }
-    h1 { 
+    .header { 
+      background: #222; 
+      color: #ff0000; 
       text-align: center; 
-      margin: 15px 0 8px; 
-      color: #ff3c00; 
-      font-size: 26px; 
+      padding: 12px; 
+      font-size: 22px; 
+      text-shadow: 0 0 10px #ff0000; 
+      border-bottom: 4px solid #ffd700;
     }
-    h2, h3 { text-align: center; margin: 4px 0; }
-    #waveform { height: 140px; background: #000; position: relative; cursor: pointer; }
+    h1 { text-align: center; margin: 10px 0 5px; color: #ffd700; font-size: 28px; text-shadow: 0 0 8px #ff0000; }
+    #waveform { height: 120px; background: #000; position: relative; cursor: pointer; margin: 10px; border: 3px solid #333; }
     .controls { 
       display: flex; 
       justify-content: center; 
-      align-items: center; 
-      gap: 25px; 
-      padding: 12px; 
+      gap: 20px; 
+      padding: 10px; 
+      background: #222;
     }
     button { 
-      background: none; 
-      border: none; 
-      color: #fff; 
-      font-size: 26px; 
+      background: #333; 
+      color: #ffd700; 
+      border: 3px solid #ffd700; 
+      border-radius: 8px; 
+      padding: 10px 16px; 
+      font-size: 24px; 
       cursor: pointer; 
     }
-    #playBtn { font-size: 40px; }
-    .action-btn { font-size: 24px; padding: 8px 14px; }
+    #playBtn { font-size: 36px; padding: 8px 24px; }
+    .action-row { 
+      display: flex; 
+      justify-content: center; 
+      gap: 25px; 
+      padding: 10px; 
+      background: #222; 
+    }
+    .action-btn { 
+      background: #222; 
+      color: #ffd700; 
+      border: 3px solid #ffd700; 
+      padding: 8px 14px; 
+      font-size: 20px; 
+      border-radius: 50px; 
+    }
     #popup { 
       position: fixed; top: 50%; left: 50%; 
       transform: translate(-50%, -50%); 
-      background: #1a1a1a; padding: 25px; 
-      border-radius: 16px; 
-      box-shadow: 0 10px 40px rgba(0,0,0,0.9); 
-      max-width: 360px; text-align: center; 
-      z-index: 1000; display: none; 
+      background: #1a0f08; 
+      padding: 30px; 
+      border: 8px solid #ffd700; 
+      border-radius: 12px; 
+      box-shadow: 0 0 30px #ff0000; 
+      max-width: 360px; 
+      text-align: center; 
+      z-index: 1000; 
+      display: none; 
     }
-    .buttons { display: flex; gap: 12px; margin: 20px 0; }
-    .btn { flex: 1; padding: 16px; font-size: 17px; border-radius: 999px; cursor: pointer; font-weight: bold; }
-    .teal { background: #00d4aa; color: #000; }
-    .white { background: #fff; color: #000; }
-    .toggle { display: flex; align-items: center; justify-content: center; gap: 10px; margin-top: 15px; font-size: 15px; }
     iframe { 
       width: 100%; 
-      max-width: 600px; 
-      margin: 20px auto; 
+      max-width: 620px; 
+      margin: 15px auto; 
       display: block; 
       border: 0; 
-      height: 680px;   /* Tall enough for full artist image */
+      height: 720px; 
+      box-shadow: 0 10px 30px rgba(0,0,0,0.8);
     }
   </style>
 </head>
 <body>
 
-  <div id="custom-player">
+  <div id="jukebox">
+    <div class="header">●●● THE ACQUITTED JUKEBOX ●●●</div>
     <h1>The AcQuitted</h1>
     <h2 id="title">Loading track...</h2>
     <h3 id="artist">The AcQuitted</h3>
@@ -84,8 +107,7 @@
       <button onclick="nextTrack()">⏭</button>
     </div>
 
-    <!-- Action Buttons -->
-    <div style="display:flex; justify-content:center; gap:30px; padding-bottom:15px;">
+    <div class="action-row">
       <button class="action-btn" onclick="likeTrack()">❤️ Like</button>
       <button class="action-btn" onclick="shareTrack()">🔗 Share</button>
       <button class="action-btn" onclick="commentTrack()">💬 Comment</button>
@@ -94,19 +116,19 @@
 
   <!-- Choice Popup -->
   <div id="popup">
-    <h3>How would you like to listen?</h3>
-    <div class="buttons">
-      <button class="btn teal" onclick="chooseOption('browser')">Listen in Browser</button>
-      <button class="btn white" onclick="chooseOption('soundcloud')">Open SoundCloud</button>
+    <h3 style="color:#ffd700;">How would you like to listen?</h3>
+    <div style="display:flex; gap:12px; margin:20px 0;">
+      <button onclick="chooseOption('browser')" style="flex:1; padding:16px; background:#ff0000; color:white; border:none; border-radius:8px; font-size:17px;">Listen in Browser</button>
+      <button onclick="chooseOption('soundcloud')" style="flex:1; padding:16px; background:#ffd700; color:#000; border:none; border-radius:8px; font-size:17px;">Open SoundCloud</button>
     </div>
-    <div class="toggle">
+    <div style="display:flex; align-items:center; justify-content:center; gap:10px;">
       <input type="checkbox" id="rememberToggle">
-      <label for="rememberToggle">Remember my choice</label>
+      <label for="rememberToggle" style="color:#ffd700;">Remember my choice</label>
     </div>
   </div>
 
-  <!-- Official SoundCloud Widget (tall) -->
-  <iframe id="sc-widget" width="100%" height="680" scrolling="no" frameborder="no" 
+  <!-- Tall SoundCloud Widget (full playlist view) -->
+  <iframe id="sc-widget" width="100%" height="720" scrolling="no" frameborder="no" 
     src="https://w.soundcloud.com/player/?url=https://soundcloud.com/theacquitted&color=%23ff3c00&show_comments=true&show_user=true&show_reposts=false&visual=true">
   </iframe>
 
@@ -156,7 +178,7 @@
 
     // Fiery waveform
     const canvas = document.createElement('canvas');
-    canvas.width = 580; canvas.height = 140;
+    canvas.width = 580; canvas.height = 120;
     document.getElementById('waveform').appendChild(canvas);
     const ctx = canvas.getContext('2d');
 
@@ -164,8 +186,8 @@
       ctx.clearRect(0, 0, canvas.width, canvas.height);
       const time = Date.now() / 70;
       for (let i = 0; i < canvas.width; i += 4) {
-        const h = Math.sin(i/22 + time) * 38 + 82 + Math.random()*22;
-        ctx.fillStyle = `hsl(18, 100%, ${55 + Math.random()*35}%)`;
+        const h = Math.sin(i/22 + time) * 35 + 75 + Math.random()*20;
+        ctx.fillStyle = `hsl(25, 100%, ${60 + Math.random()*30}%)`;
         ctx.fillRect(i, canvas.height - h, 4, h);
       }
       requestAnimationFrame(drawFire);
