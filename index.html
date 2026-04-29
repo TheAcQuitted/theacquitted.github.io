@@ -7,18 +7,20 @@
   <script src="https://w.soundcloud.com/player/api.js"></script>
   <style>
     body { font-family: 'Courier New', monospace; background: #1a0f08; color: #ffd700; margin: 0; padding: 20px; }
-    #jukebox { max-width: 620px; margin: 20px auto; background: linear-gradient(#c0c0c0, #a0a0a0, #808080); border: 16px solid #222; border-radius: 30px; box-shadow: 0 30px 60px rgba(0,0,0,0.95), inset 0 0 80px rgba(255,215,0,0.4); overflow: hidden; }
+    #jukebox { max-width: 620px; margin: 20px auto; background: linear-gradient(#c0c0c0, #a0a0a0, #808080); border: 16px solid #222; border-radius: 30px; box-shadow: 0 30px 60px rgba(0,0,0,0.95), inset 0 0 80px rgba(255,215,0,0.4); overflow: hidden; transition: transform 0.4s ease, box-shadow 0.4s ease; }
+    #jukebox:hover { transform: scale(1.02); box-shadow: 0 40px 80px rgba(0,0,0,0.95); }
     .header { background: #111; color: #ff2222; text-align: center; padding: 12px; font-size: 24px; font-weight: bold; text-shadow: 0 0 12px #ff0000; border-bottom: 8px solid #ffd700; }
-    #artwork { width: 100%; height: 280px; object-fit: cover; border-bottom: 8px solid #ffd700; }
+    #artwork { width: 100%; height: 280px; object-fit: cover; border-bottom: 8px solid #ffd700; transition: opacity 0.6s ease; }
     .playlist-nav { display: flex; justify-content: space-between; align-items: center; padding: 8px 15px; background: #222; }
     h1 { text-align: center; margin: 8px 0 4px; color: #ffd700; font-size: 26px; text-shadow: 0 0 10px #ff0000; }
     #title { text-align: center; margin: 4px 0 10px; font-size: 18px; }
-    #waveform { height: 110px; background: #000; margin: 10px 15px; border: 5px solid #333; border-radius: 8px; }
-    .controls { display: flex; justify-content: center; gap: 25px; padding: 12px; background: #222; }
-    button { background: #333; color: #ffd700; border: 5px solid #ffd700; border-radius: 12px; padding: 10px 18px; font-size: 26px; cursor: pointer; }
+    #waveform { height: 110px; background: #000; margin: 10px 15px; border: 5px solid #333; border-radius: 8px; overflow: hidden; }
+    .controls, .action-row { display: flex; justify-content: center; gap: 25px; padding: 12px; background: #222; }
+    button { background: #333; color: #ffd700; border: 5px solid #ffd700; border-radius: 12px; padding: 10px 18px; font-size: 26px; cursor: pointer; transition: all 0.2s ease; }
+    button:hover { background: #ffd700; color: #111; transform: scale(1.1); }
     #playBtn { font-size: 40px; }
-    .action-row { display: flex; justify-content: center; gap: 25px; padding: 12px; background: #222; }
-    .action-btn { background: #222; color: #ffd700; border: 4px solid #ffd700; padding: 10px 16px; font-size: 18px; border-radius: 50px; }
+    .action-btn { background: #222; color: #ffd700; border: 4px solid #ffd700; padding: 10px 16px; font-size: 18px; border-radius: 50px; transition: all 0.2s ease; }
+    .action-btn:hover { background: #ffd700; color: #111; }
     iframe { width: 100%; max-width: 620px; margin: 10px auto; display: block; border: 0; height: 680px; }
     #popup { position: fixed; top: 50%; left: 50%; transform: translate(-50%, -50%); background: #1a0f08; padding: 35px; border: 10px solid #ffd700; border-radius: 20px; box-shadow: 0 0 50px #ff0000; z-index: 1000; display: none; text-align: center; }
   </style>
@@ -69,6 +71,7 @@
     let currentTrackPermalink = "";
     let currentPlaylistIndex = 0;
 
+    // 15 Playlists — Random on every page load
     const playlists = [
       { name: "🧬 VIRTUANON - ASCENSION", url: "https://soundcloud.com/theacquitted/sets/the-acquitted-virtuanon" },
       { name: "VIRTUANON - CONSPIRACY SOLUTIONIST", url: "https://soundcloud.com/theacquitted/sets/virtuanon-conspiracy" },
@@ -83,7 +86,8 @@
       { name: "COUNTRY TIS OF THEE", url: "https://soundcloud.com/theacquitted/sets/country-tis-of-thee" },
       { name: "🎶 WE GO ALL! (Full Album)", url: "https://soundcloud.com/theacquitted/sets/acquitted-double-album-self" },
       { name: "THE ROAD IS MY HOME", url: "https://soundcloud.com/theacquitted/sets/the-road-is-my-home" },
-      { name: "DESERT SANDS", url: "https://soundcloud.com/theacquitted/sets/the-acquitted-desert-sands" }
+      { name: "DESERT SANDS", url: "https://soundcloud.com/theacquitted/sets/the-acquitted-desert-sands" },
+      { name: "BEST OF US", url: "https://soundcloud.com/theacquitted/best-of-us" }
     ];
 
     function loadCurrentPlaylist() {
@@ -92,11 +96,10 @@
 
       const widgetUrl = `https://w.soundcloud.com/player/?url=${encodeURIComponent(pl.url)}&color=%23ff3c00&auto_play=false&hide_related=true&show_comments=false&show_user=true&visual=true&single_active=true`;
 
-      const iframe = document.getElementById('sc-widget');
-      iframe.src = widgetUrl;
+      document.getElementById('sc-widget').src = widgetUrl;
 
       setTimeout(() => {
-        widget = SC.Widget(iframe);
+        widget = SC.Widget(document.getElementById('sc-widget'));
         widget.bind(SC.Widget.Events.READY, updateTrackInfo);
         widget.bind(SC.Widget.Events.TRACK_CHANGE, updateTrackInfo);
       }, 800);
@@ -137,7 +140,7 @@
     function shareTrack() { currentTrackPermalink && window.open(currentTrackPermalink, '_blank'); }
     function commentTrack() { currentTrackPermalink && window.open(currentTrackPermalink + "#comments", '_blank'); }
 
-    // Fire waveform animation
+    // Fire waveform
     const canvas = document.createElement('canvas');
     canvas.width = 580; canvas.height = 110;
     document.getElementById('waveform').appendChild(canvas);
@@ -154,7 +157,11 @@
     }
     drawFire();
 
-    window.onload = loadCurrentPlaylist;
+    // RANDOM START every page load
+    window.onload = () => {
+      currentPlaylistIndex = Math.floor(Math.random() * playlists.length);
+      loadCurrentPlaylist();
+    };
   </script>
 </body>
 </html>
