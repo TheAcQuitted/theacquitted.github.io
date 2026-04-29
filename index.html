@@ -1,168 +1,49 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>The AcQuitted Jukebox</title>
-  <script src="https://w.soundcloud.com/player/api.js"></script>
-  <style>
-    body { font-family: 'Courier New', monospace; background: #1a0f08; color: #ffd700; margin: 0; padding: 20px; }
-    #jukebox { max-width: 620px; margin: 20px auto; background: linear-gradient(#c0c0c0, #a0a0a0, #808080); border: 16px solid #222; border-radius: 30px; box-shadow: 0 30px 60px rgba(0,0,0,0.95), inset 0 0 80px rgba(255,215,0,0.4); overflow: hidden; }
-    .header { background: #111; color: #ff2222; text-align: center; padding: 12px; font-size: 24px; font-weight: bold; text-shadow: 0 0 12px #ff0000; border-bottom: 8px solid #ffd700; }
-    #artwork { width: 100%; height: 280px; object-fit: cover; border-bottom: 8px solid #ffd700; }
-    .playlist-nav { display: flex; justify-content: space-between; align-items: center; padding: 8px 15px; background: #222; }
-    h1 { text-align: center; margin: 8px 0 4px; color: #ffd700; font-size: 26px; text-shadow: 0 0 10px #ff0000; }
-    #title { text-align: center; margin: 4px 0 10px; font-size: 18px; }
-    #waveform { height: 110px; background: #000; margin: 10px 15px; border: 5px solid #333; border-radius: 8px; }
-    .controls { display: flex; justify-content: center; gap: 25px; padding: 12px; background: #222; }
-    button { background: #333; color: #ffd700; border: 5px solid #ffd700; border-radius: 12px; padding: 10px 18px; font-size: 26px; cursor: pointer; }
-    #playBtn { font-size: 40px; }
-    .action-row { display: flex; justify-content: center; gap: 25px; padding: 12px; background: #222; }
-    .action-btn { background: #222; color: #ffd700; border: 4px solid #ffd700; padding: 10px 16px; font-size: 18px; border-radius: 50px; }
-    iframe { width: 100%; max-width: 620px; margin: 10px auto; display: block; border: 0; height: 680px; }
-    #popup { position: fixed; top: 50%; left: 50%; transform: translate(-50%, -50%); background: #1a0f08; padding: 35px; border: 10px solid #ffd700; border-radius: 20px; box-shadow: 0 0 50px #ff0000; z-index: 1000; display: none; text-align: center; }
-  </style>
-</head>
-<body>
+### The AcQuitted - Complete Playlist Collection (15 Playlists)
 
-  <div id="jukebox">
-    <div class="header">THE ACQUITTED JUKEBOX</div>
-    
-    <img id="artwork" src="https://i1.sndcdn.com/avatars-000000000000-000000-large.jpg" alt="Album Art">
+#### Vocal / Thematic Albums (Virtuanon Series - Electronic / Vocal)
+1. **Virtuanon - Double Helix** (Missing one - Vocal/electronic)  
+   https://soundcloud.com/theacquitted/virtuanon-double-helix
 
-    <div class="playlist-nav">
-      <button onclick="prevPlaylist()" style="background:none;border:none;font-size:32px;color:#ffd700;">◀</button>
-      <h1 id="playlist-name">Loading...</h1>
-      <button onclick="nextPlaylist()" style="background:none;border:none;font-size:32px;color:#ffd700;">▶</button>
-    </div>
+2. **Virtuanon - Conspiracy Solutionist**  
+   https://soundcloud.com/theacquitted/sets/virtuanon-conspiracy
 
-    <h2 id="title">Loading track...</h2>
+3. **Virtuanon - Ascension**  
+   https://soundcloud.com/theacquitted/sets/the-acquitted-virtuanon
 
-    <div id="waveform"></div>
+4. **The AcQuitted - Virtuanon - Feel the fire**  
+   https://soundcloud.com/theacquitted/sets/virtuanon
 
-    <div class="controls">
-      <button onclick="prevTrack()">⏮</button>
-      <button id="playBtn" onclick="togglePlay()">▶</button>
-      <button onclick="nextTrack()">⏭</button>
-    </div>
+#### Vocal / Patriotic & Outlaw Country Albums
+5. **Frogs And Frenz, ACTIVATE!**  
+   https://soundcloud.com/theacquitted/sets/frogs-and-frenz
 
-    <div class="action-row">
-      <button class="action-btn" onclick="likeTrack()">❤️ Like</button>
-      <button class="action-btn" onclick="shareTrack()">🔗 Share</button>
-      <button class="action-btn" onclick="commentTrack()">💬 Comment</button>
-    </div>
-  </div>
+6. **MAGAnonymous**  
+   https://soundcloud.com/theacquitted/sets/maganonymous
 
-  <div id="popup">
-    <h3 style="color:#ffd700;">CHOOSE YOUR PLAYER</h3>
-    <div style="display:flex; gap:15px; margin:25px 0;">
-      <button onclick="chooseOption('browser')" style="flex:1; padding:18px; background:#ff2222; color:white; border:4px solid #ffd700; border-radius:12px;">LISTEN IN BROWSER</button>
-      <button onclick="chooseOption('soundcloud')" style="flex:1; padding:18px; background:#ffd700; color:#000; border:4px solid #ffd700; border-radius:12px;">OPEN SOUNDCLOUD</button>
-    </div>
-    <label style="color:#ffd700;"><input type="checkbox" id="rememberToggle"> Remember my choice</label>
-  </div>
+7. **States Of Mind**  
+   https://soundcloud.com/theacquitted/sets/state-of-mind
 
-  <iframe id="sc-widget" width="100%" height="680" scrolling="no" frameborder="no" src=""></iframe>
+8. **Sweetleaf Of Mary**  
+   https://soundcloud.com/theacquitted/sets/sweetleaf-of-mary
 
-  <script>
-    let widget;
-    let currentTrackPermalink = "";
-    let currentPlaylistIndex = 0;
+9. **Under Cover** (Covers - Vocal)  
+   https://soundcloud.com/theacquitted/sets/under-cover
 
-    const playlists = [
-      { name: "VIRTUANON - DOUBLE HELIX", url: "https://soundcloud.com/theacquitted/virtuanon-double-helix" },
-      { name: "VIRTUANON - CONSPIRACY SOLUTIONIST", url: "https://soundcloud.com/theacquitted/sets/virtuanon-conspiracy" },
-      { name: "VIRTUANON - ASCENSION", url: "https://soundcloud.com/theacquitted/sets/the-acquitted-virtuanon" },
-      { name: "VIRTUANON - FEEL THE FIRE", url: "https://soundcloud.com/theacquitted/sets/virtuanon" },
-      { name: "FROGS AND FRENZ ACTIVATE", url: "https://soundcloud.com/theacquitted/sets/frogs-and-frenz" },
-      { name: "MAGANONYMOUS", url: "https://soundcloud.com/theacquitted/sets/maganonymous" },
-      { name: "STATES OF MIND", url: "https://soundcloud.com/theacquitted/sets/state-of-mind" },
-      { name: "SWEETLEAF OF MARY", url: "https://soundcloud.com/theacquitted/sets/sweetleaf-of-mary" },
-      { name: "UNDER COVER", url: "https://soundcloud.com/theacquitted/sets/under-cover" },
-      { name: "THREE SEVENTY NINE", url: "https://soundcloud.com/theacquitted/sets/three-seventy-nine" },
-      { name: "SHINERS MOON", url: "https://soundcloud.com/theacquitted/sets/shiners-moon" },
-      { name: "COUNTRY TIS OF THEE", url: "https://soundcloud.com/theacquitted/sets/country-tis-of-thee" },
-      { name: "WE GO ALL", url: "https://soundcloud.com/theacquitted/we-go-all" },
-      { name: "THE ROAD IS MY HOME", url: "https://soundcloud.com/theacquitted/sets/the-road-is-my-home" },
-      { name: "DESERT SANDS", url: "https://soundcloud.com/theacquitted/sets/the-acquitted-desert-sands" }
-    ];
+10. **Three Seventy Nine** (Trucker / Outlaw Country)  
+    https://soundcloud.com/theacquitted/sets/three-seventy-nine
 
-    function loadCurrentPlaylist() {
-      const pl = playlists[currentPlaylistIndex];
-      document.getElementById('playlist-name').textContent = pl.name;
+11. **Shiners Moon** (Country)  
+    https://soundcloud.com/theacquitted/sets/shiners-moon (or search profile)
 
-      const widgetUrl = `https://w.soundcloud.com/player/?url=${encodeURIComponent(pl.url)}&color=%23ff3c00&auto_play=false&hide_related=true&show_comments=false&show_user=true&visual=true`;
+12. **Country 'Tis Of Thee**  
+    https://soundcloud.com/theacquitted/sets/country-tis-of-thee (or search profile)
 
-      document.getElementById('sc-widget').src = widgetUrl;
+13. **We Go All**  
+    https://soundcloud.com/theacquitted/sets/we-go-all (or search profile)
 
-      widget = SC.Widget(document.getElementById('sc-widget'));
-      widget.bind(SC.Widget.Events.READY, updateTrackInfo);
-      widget.bind(SC.Widget.Events.TRACK_CHANGE, updateTrackInfo);
-    }
+14. **The Road Is My Home**  
+    https://soundcloud.com/theacquitted/sets/the-road-is-my-home (or search profile)
 
-    function updateTrackInfo() {
-      if (!widget) return;
-      widget.getCurrentSound((sound) => {
-        if (sound) {
-          document.getElementById('title').textContent = sound.title || "Now Playing";
-          currentTrackPermalink = sound.permalink_url || "";
-          if (sound.artwork_url) {
-            document.getElementById('artwork').src = sound.artwork_url.replace('-large', '-t500x500');
-          }
-        }
-      });
-    }
-
-    function prevPlaylist() {
-      currentPlaylistIndex = (currentPlaylistIndex - 1 + playlists.length) % playlists.length;
-      loadCurrentPlaylist();
-    }
-
-    function nextPlaylist() {
-      currentPlaylistIndex = (currentPlaylistIndex + 1) % playlists.length;
-      loadCurrentPlaylist();
-    }
-
-    function togglePlay() {
-      if (!widget) return;
-      if (localStorage.getItem('listenPreference')) {
-        widget.toggle();
-      } else {
-        document.getElementById('popup').style.display = 'block';
-      }
-    }
-
-    function chooseOption(option) {
-      if (document.getElementById('rememberToggle').checked) localStorage.setItem('listenPreference', option);
-      document.getElementById('popup').style.display = 'none';
-      if (widget) widget.play();
-    }
-
-    function prevTrack() { widget && widget.prev(); }
-    function nextTrack() { widget && widget.next(); }
-
-    function likeTrack() { currentTrackPermalink && window.open(currentTrackPermalink, '_blank'); }
-    function shareTrack() { currentTrackPermalink && window.open(currentTrackPermalink, '_blank'); }
-    function commentTrack() { currentTrackPermalink && window.open(currentTrackPermalink + "#comments", '_blank'); }
-
-    const canvas = document.createElement('canvas');
-    canvas.width = 580; canvas.height = 110;
-    document.getElementById('waveform').appendChild(canvas);
-    const ctx = canvas.getContext('2d');
-
-    function drawFire() {
-      ctx.clearRect(0, 0, canvas.width, canvas.height);
-      const time = Date.now() / 70;
-      for (let i = 0; i < canvas.width; i += 4) {
-        const h = Math.sin(i/22 + time) * 35 + 70 + Math.random()*25;
-        ctx.fillStyle = `hsl(25, 100%, ${60 + Math.random()*30}%)`;
-        ctx.fillRect(i, canvas.height - h, 4, h);
-      }
-      requestAnimationFrame(drawFire);
-    }
-    drawFire();
-
-    window.onload = loadCurrentPlaylist;
-  </script>
-</body>
-</html>
+#### Instrumental / Desert Closer
+15. **The AcQuitted - Desert Sands** (Instrumental-heavy)  
+    https://soundcloud.com/theacquitted/sets/the-acquitted-desert-sands
