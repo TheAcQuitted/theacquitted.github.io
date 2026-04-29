@@ -94,4 +94,77 @@
       const pl = playlists[currentPlaylistIndex];
       document.getElementById('playlist-name').textContent = pl.name;
 
-      const widgetUrl = `https://w.soundcloud.com/player/?url=${encodeURIComponent(pl.url)}&color=%23ff3c00&auto_play=false&hide_related=true&show_comments=false&show_user=true&visual=true&single_active​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​
+      const widgetUrl = `https://w.soundcloud.com/player/?url=${encodeURIComponent(pl.url)}&color=%23ff3c00&auto_play=false&hide_related=true&show_comments=false&show_user=true&visual=true&single_active=true`;
+
+      document.getElementById('sc-widget').src = widgetUrl;
+
+      setTimeout(() => {
+        widget = SC.Widget(document.getElementById('sc-widget'));
+        widget.bind(SC.Widget.Events.READY, updateTrackInfo);
+        widget.bind(SC.Widget.Events.TRACK_CHANGE, updateTrackInfo);
+      }, 800);
+    }
+
+    function updateTrackInfo() {
+      if (!widget) return;
+      widget.getCurrentSound((sound) => {
+        if (sound) {
+          document.getElementById('title').textContent = sound.title || "Now Playing";
+          currentTrackPermalink = sound.permalink_url || "";
+          if (sound.artwork_url) {
+            document.getElementById('artwork').src = sound.artwork_url.replace('-large', '-t500x500');
+          }
+        }
+      });
+    }
+
+    function prevPlaylist() { currentPlaylistIndex = (currentPlaylistIndex - 1 + playlists.length) % playlists.length; loadCurrentPlaylist(); }
+    function nextPlaylist() { currentPlaylistIndex = (currentPlaylistIndex + 1) % playlists.length; loadCurrentPlaylist(); }
+
+    function shufflePlaylist() {
+      currentPlaylistIndex = Math.floor(Math.random() * playlists.length);
+      loadCurrentPlaylist();
+    }
+
+    function togglePlay() {
+      if (!widget) return;
+      if (localStorage.getItem('listenPreference')) widget.toggle();
+      else document.getElementById('popup').style.display = 'block';
+    }
+
+    function chooseOption(option) {
+      if (document.getElementById('rememberToggle').checked) localStorage.setItem('listenPreference', option);
+      document.getElementById('popup').style.display = 'none';
+      if (widget) widget.play();
+    }
+
+    function prevTrack() { widget && widget.prev(); }
+    function nextTrack() { widget && widget.next(); }
+
+    function likeTrack() { currentTrackPermalink && window.open(currentTrackPermalink, '_blank'); }
+    function shareTrack() { currentTrackPermalink && window.open(currentTrackPermalink, '_blank'); }
+    function commentTrack() { currentTrackPermalink && window.open(currentTrackPermalink + "#comments", '_blank'); }
+
+    const canvas = document.createElement('canvas');
+    canvas.width = 580; canvas.height = 110;
+    document.getElementById('waveform').appendChild(canvas);
+    const ctx = canvas.getContext('2d');
+    function drawFire() {
+      ctx.clearRect(0, 0, canvas.width, canvas.height);
+      const time = Date.now() / 70;
+      for (let i = 0; i < canvas.width; i += 4) {
+        const h = Math.sin(i/22 + time) * 35 + 70 + Math.random()*25;
+        ctx.fillStyle = `hsl(25, 100%, ${60 + Math.random()*30}%)`;
+        ctx.fillRect(i, canvas.height - h, 4, h);
+      }
+      requestAnimationFrame(drawFire);
+    }
+    drawFire();
+
+    window.onload = () => {
+      currentPlaylistIndex = Math.floor(Math.random() * playlists.length);
+      loadCurrentPlaylist();
+    };
+  </script>
+</body>
+</html>
