@@ -70,7 +70,7 @@
     let currentPlaylistIndex = 0;
 
     const playlists = [
-      { name: "🧬 VIRTUANON - ASCENSION (incl. Double Helix)", url: "https://soundcloud.com/theacquitted/sets/the-acquitted-virtuanon" },
+      { name: "🧬 VIRTUANON - ASCENSION", url: "https://soundcloud.com/theacquitted/sets/the-acquitted-virtuanon" },
       { name: "VIRTUANON - CONSPIRACY SOLUTIONIST", url: "https://soundcloud.com/theacquitted/sets/virtuanon-conspiracy" },
       { name: "VIRTUANON - FEEL THE FIRE", url: "https://soundcloud.com/theacquitted/sets/virtuanon" },
       { name: "FROGS AND FRENZ ACTIVATE", url: "https://soundcloud.com/theacquitted/sets/frogs-and-frenz" },
@@ -137,7 +137,7 @@
     function shareTrack() { currentTrackPermalink && window.open(currentTrackPermalink, '_blank'); }
     function commentTrack() { currentTrackPermalink && window.open(currentTrackPermalink + "#comments", '_blank'); }
 
-    // Fire waveform
+    // Fire waveform animation
     const canvas = document.createElement('canvas');
     canvas.width = 580; canvas.height = 110;
     document.getElementById('waveform').appendChild(canvas);
