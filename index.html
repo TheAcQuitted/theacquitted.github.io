@@ -98,7 +98,10 @@
       const url = playlists[currentPlaylistIndex];
       document.getElementById('playlist-name').textContent = url.split('/').pop().replace(/-/g, ' ').toUpperCase();
       
-      document.getElementById('sc-widget').src = `https://w.soundcloud.com/player/?url=${encodeURIComponent(url)}&color=%23ff3c00&show_comments=true&show_user=true&show_reposts=false&visual=true`;
+      // MAXIMUM HIDING PARAMETERS
+      const widgetUrl = `https://w.soundcloud.com/player/?url=${encodeURIComponent(url)}&color=%23ff3c00&auto_play=false&hide_related=true&show_comments=false&show_user=false&show_reposts=false&show_teaser=false&visual=true&buying=false&sharing=false&download=false&show_playcount=false`;
+      
+      document.getElementById('sc-widget').src = widgetUrl;
       
       widget = SC.Widget(document.getElementById('sc-widget'));
       widget.bind(SC.Widget.Events.READY, updateTrackInfo);
@@ -129,46 +132,4 @@
 
     function togglePlay() {
       if (!widget) return;
-      if (localStorage.getItem('listenPreference')) {
-        widget.toggle();
-      } else {
-        document.getElementById('popup').style.display = 'block';
-      }
-    }
-
-    function chooseOption(option) {
-      if (document.getElementById('rememberToggle').checked) localStorage.setItem('listenPreference', option);
-      document.getElementById('popup').style.display = 'none';
-      widget.play();
-    }
-
-    function prevTrack() { widget && widget.prev(); }
-    function nextTrack() { widget && widget.next(); }
-
-    function likeTrack() { currentTrackPermalink && window.open(currentTrackPermalink, '_blank'); }
-    function shareTrack() { currentTrackPermalink && window.open(currentTrackPermalink, '_blank'); }
-    function commentTrack() { currentTrackPermalink && window.open(currentTrackPermalink + "#comments", '_blank'); }
-
-    // Fiery waveform
-    const canvas = document.createElement('canvas');
-    canvas.width = 580; canvas.height = 110;
-    document.getElementById('waveform').appendChild(canvas);
-    const ctx = canvas.getContext('2d');
-
-    function drawFire() {
-      ctx.clearRect(0, 0, canvas.width, canvas.height);
-      const time = Date.now() / 70;
-      for (let i = 0; i < canvas.width; i += 4) {
-        const h = Math.sin(i/22 + time) * 35 + 70 + Math.random()*25;
-        ctx.fillStyle = `hsl(25, 100%, ${60 + Math.random()*30}%)`;
-        ctx.fillRect(i, canvas.height - h, 4, h);
-      }
-      requestAnimationFrame(drawFire);
-    }
-    drawFire();
-
-    // Start
-    window.onload = loadCurrentPlaylist;
-  </script>
-</body>
-</html>
+      if (localStorage.get​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​
