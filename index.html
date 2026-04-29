@@ -70,10 +70,9 @@
     let currentPlaylistIndex = 0;
 
     const playlists = [
-      // Double Helix now FIRST and in its own playlist/set context
-      { name: "🧬 VIRTUANON - DOUBLE HELIX", url: "https://soundcloud.com/theacquitted/virtuanon-double-helix" },
+      // 🧬 DOUBLE HELIX IS NOW ONLY IN THIS PLAYLIST (Ascension) - removed standalone
+      { name: "🧬 VIRTUANON - ASCENSION (Double Helix included)", url: "https://soundcloud.com/theacquitted/sets/the-acquitted-virtuanon" },
       { name: "VIRTUANON - CONSPIRACY SOLUTIONIST", url: "https://soundcloud.com/theacquitted/sets/virtuanon-conspiracy" },
-      { name: "VIRTUANON - ASCENSION", url: "https://soundcloud.com/theacquitted/sets/the-acquitted-virtuanon" },
       { name: "VIRTUANON - FEEL THE FIRE", url: "https://soundcloud.com/theacquitted/sets/virtuanon" },
       { name: "FROGS AND FRENZ ACTIVATE", url: "https://soundcloud.com/theacquitted/sets/frogs-and-frenz" },
       { name: "MAGANONYMOUS", url: "https://soundcloud.com/theacquitted/sets/maganonymous" },
@@ -92,13 +91,20 @@
       const pl = playlists[currentPlaylistIndex];
       document.getElementById('playlist-name').textContent = pl.name;
 
-      const widgetUrl = `https://w.soundcloud.com/player/?url=${encodeURIComponent(pl.url)}&color=%23ff3c00&auto_play=false&hide_related=true&show_comments=false&show_user=true&visual=true`;
+      const widgetUrl = `https://w.soundcloud.com/player/?url=${encodeURIComponent(pl.url)}&color=%23ff3c00&auto_play=false&hide_related=true&show_comments=false&show_user=true&visual=true&single_active=true`;
 
-      document.getElementById('sc-widget').src = widgetUrl;
+      const iframe = document.getElementById('sc-widget');
+      iframe.src = widgetUrl;
 
-      widget = SC.Widget(document.getElementById('sc-widget'));
-      widget.bind(SC.Widget.Events.READY, updateTrackInfo);
-      widget.bind(SC.Widget.Events.TRACK_CHANGE, updateTrackInfo);
+      setTimeout(() => {
+        try {
+          widget = SC.Widget(iframe);
+          widget.bind(SC.Widget.Events.READY, () => {
+            updateTrackInfo();
+          });
+          widget.bind(SC.Widget.Events.TRACK_CHANGE, updateTrackInfo);
+        } catch(e) {}
+      }, 800);
     }
 
     function updateTrackInfo() {
@@ -146,6 +152,7 @@
     function shareTrack() { currentTrackPermalink && window.open(currentTrackPermalink, '_blank'); }
     function commentTrack() { currentTrackPermalink && window.open(currentTrackPermalink + "#comments", '_blank'); }
 
+    // Fire waveform
     const canvas = document.createElement('canvas');
     canvas.width = 580; canvas.height = 110;
     document.getElementById('waveform').appendChild(canvas);
