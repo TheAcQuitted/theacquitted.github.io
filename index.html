@@ -15,13 +15,13 @@
     h1 { text-align: center; margin: 8px 0 4px; color: #ffd700; font-size: 26px; text-shadow: 0 0 10px #ff0000; }
     #title { text-align: center; margin: 4px 0 10px; font-size: 18px; }
     #waveform { height: 110px; background: #000; margin: 10px 15px; border: 5px solid #333; border-radius: 8px; overflow: hidden; }
-    .controls, .action-row { display: flex; justify-content: center; gap: 20px; padding: 12px; background: #222; flex-wrap: wrap; }
+    .controls, .action-row { display: flex; justify-content: center; gap: 15px; padding: 12px; background: #222; flex-wrap: wrap; }
     button { background: #333; color: #ffd700; border: 5px solid #ffd700; border-radius: 12px; padding: 10px 18px; font-size: 26px; cursor: pointer; transition: all 0.2s ease; }
     button:hover { background: #ffd700; color: #111; transform: scale(1.1); }
     #playBtn { font-size: 40px; }
-    .action-btn { background: #222; color: #ffd700; border: 4px solid #ffd700; padding: 10px 16px; font-size: 18px; border-radius: 50px; transition: all 0.2s ease; min-width: 110px; }
+    .action-btn { background: #222; color: #ffd700; border: 4px solid #ffd700; padding: 10px 16px; font-size: 18px; border-radius: 50px; transition: all 0.2s ease; min-width: 100px; }
     .action-btn:hover { background: #ffd700; color: #111; }
-    .shuffle-btn { font-size: 24px; padding: 12px 20px; }
+    .toggle-on { background: #ff2222 !important; color: white !important; }
     iframe { width: 100%; max-width: 620px; margin: 10px auto; display: block; border: 0; height: 680px; }
     #popup { position: fixed; top: 50%; left: 50%; transform: translate(-50%, -50%); background: #1a0f08; padding: 35px; border: 10px solid #ffd700; border-radius: 20px; box-shadow: 0 0 50px #ff0000; z-index: 1000; display: none; text-align: center; }
   </style>
@@ -51,6 +51,7 @@
 
     <div class="action-row">
       <button class="action-btn shuffle-btn" onclick="shufflePlaylist()">🔀 SHUFFLE</button>
+      <button id="repeatBtn" class="action-btn" onclick="toggleRepeat()">🔁 REPEAT OFF</button>
       <button class="action-btn" onclick="likeTrack()">❤️ Like</button>
       <button class="action-btn" onclick="shareTrack()">🔗 Share</button>
       <button class="action-btn" onclick="commentTrack()">💬 Comment</button>
@@ -72,6 +73,7 @@
     let widget;
     let currentTrackPermalink = "";
     let currentPlaylistIndex = 0;
+    let repeatMode = false;
 
     const playlists = [
       { name: "🧬 VIRTUANON - ASCENSION", url: "https://soundcloud.com/theacquitted/sets/the-acquitted-virtuanon" },
@@ -102,9 +104,25 @@
         widget = SC.Widget(document.getElementById('sc-widget'));
         widget.bind(SC.Widget.Events.READY, updateTrackInfo);
         widget.bind(SC.Widget.Events.TRACK_CHANGE, updateTrackInfo);
+        widget.bind(SC.Widget.Events.FINISH, onTrackFinish);
       }, 800);
     }
 
+    function onTrackFinish() {
+      if (repeatMode) {
+        widget.skip(0); // Jump back to first track of current playlist
+      }
+    }
+
+    function toggleRepeat() {
+      repeatMode = !repeatMode;
+      const btn = document.getElementById('repeatBtn');
+      btn.textContent = repeatMode ? "🔁 REPEAT ON" : "🔁 REPEAT OFF";
+      if (repeatMode) btn.classList.add('toggle-on');
+      else btn.classList.remove('toggle-on');
+    }
+
+    // Rest of your functions (updateTrackInfo, shuffle, nav, etc.) remain the same
     function updateTrackInfo() {
       if (!widget) return;
       widget.getCurrentSound((sound) => {
@@ -145,6 +163,7 @@
     function shareTrack() { currentTrackPermalink && window.open(currentTrackPermalink, '_blank'); }
     function commentTrack() { currentTrackPermalink && window.open(currentTrackPermalink + "#comments", '_blank'); }
 
+    // Fire waveform
     const canvas = document.createElement('canvas');
     canvas.width = 580; canvas.height = 110;
     document.getElementById('waveform').appendChild(canvas);
