@@ -70,49 +70,48 @@
     let currentTrackPermalink = "";
     let currentPlaylistIndex = 0;
 
-    // === ALL 15 PLAYLISTS - VOCAL FIRST, GUITAR/INSTRUMENTAL LAST ===
+    // === 15 PLAYLISTS WITH CLEAN NAMES ===
     const playlists = [
-      // VOCAL / THEMATIC (Virtuanon Series)
-      "https://soundcloud.com/theacquitted/virtuanon-double-helix",
-      "https://soundcloud.com/theacquitted/sets/virtuanon-conspiracy",
-      "https://soundcloud.com/theacquitted/sets/the-acquitted-virtuanon",
-      "https://soundcloud.com/theacquitted/sets/virtuanon",
+      { name: "VIRTUANON - DOUBLE HELIX", url: "https://soundcloud.com/theacquitted/virtuanon-double-helix" },
+      { name: "VIRTUANON - CONSPIRACY SOLUTIONIST", url: "https://soundcloud.com/theacquitted/sets/virtuanon-conspiracy" },
+      { name: "VIRTUANON - ASCENSION", url: "https://soundcloud.com/theacquitted/sets/the-acquitted-virtuanon" },
+      { name: "VIRTUANON - FEEL THE FIRE", url: "https://soundcloud.com/theacquitted/sets/virtuanon" },
 
-      // VOCAL / PATRIOTIC & OUTLAW COUNTRY
-      "https://soundcloud.com/theacquitted/sets/frogs-and-frenz",
-      "https://soundcloud.com/theacquitted/sets/maganonymous",
-      "https://soundcloud.com/theacquitted/sets/state-of-mind",
-      "https://soundcloud.com/theacquitted/sets/sweetleaf-of-mary",
-      "https://soundcloud.com/theacquitted/sets/under-cover",
-      "https://soundcloud.com/theacquitted/sets/three-seventy-nine",
-      "https://soundcloud.com/theacquitted/sets/shiners-moon",
-      "https://soundcloud.com/theacquitted/sets/country-tis-of-thee",
-      "https://soundcloud.com/theacquitted/sets/we-go-all",
-      "https://soundcloud.com/theacquitted/sets/the-road-is-my-home",
+      { name: "FROGS AND FRENZ ACTIVATE", url: "https://soundcloud.com/theacquitted/sets/frogs-and-frenz" },
+      { name: "MAGANONYMOUS", url: "https://soundcloud.com/theacquitted/sets/maganonymous" },
+      { name: "STATES OF MIND", url: "https://soundcloud.com/theacquitted/sets/state-of-mind" },
+      { name: "SWEETLEAF OF MARY", url: "https://soundcloud.com/theacquitted/sets/sweetleaf-of-mary" },
+      { name: "UNDER COVER", url: "https://soundcloud.com/theacquitted/sets/under-cover" },
+      { name: "THREE SEVENTY NINE", url: "https://soundcloud.com/theacquitted/sets/three-seventy-nine" },
+      { name: "SHINERS MOON", url: "https://soundcloud.com/theacquitted/sets/shiners-moon" },
+      { name: "COUNTRY TIS OF THEE", url: "https://soundcloud.com/theacquitted/sets/country-tis-of-thee" },
+      { name: "WE GO ALL", url: "https://soundcloud.com/theacquitted/sets/we-go-all" },
+      { name: "THE ROAD IS MY HOME", url: "https://soundcloud.com/theacquitted/sets/the-road-is-my-home" },
 
-      // GUITAR / INSTRUMENTAL LAST
-      "https://soundcloud.com/theacquitted/sets/the-acquitted-desert-sands"
+      { name: "DESERT SANDS (INSTRUMENTAL)", url: "https://soundcloud.com/theacquitted/sets/the-acquitted-desert-sands" }
     ];
 
     function loadCurrentPlaylist() {
-      const url = playlists[currentPlaylistIndex];
-      document.getElementById('playlist-name').textContent = url.split('/').pop().replace(/-/g, ' ').toUpperCase();
-      
-      // MAXIMUM HIDING PARAMETERS
-      const widgetUrl = `https://w.soundcloud.com/player/?url=${encodeURIComponent(url)}&color=%23ff3c00&auto_play=false&hide_related=true&show_comments=false&show_user=false&show_reposts=false&show_teaser=false&visual=true&buying=false&sharing=false&download=false&show_playcount=false`;
-      
+      const pl = playlists[currentPlaylistIndex];
+      document.getElementById('playlist-name').textContent = pl.name;
+
+      const widgetUrl = `https://w.soundcloud.com/player/?url=${encodeURIComponent(pl.url)}&color=%23ff3c00&auto_play=false&hide_related=true&show_comments=false&show_user=false&show_reposts=false&show_teaser=false&visual=true&buying=false&sharing=false&download=false&show_playcount=false&show_artwork=true`;
+
       document.getElementById('sc-widget').src = widgetUrl;
-      
+
       widget = SC.Widget(document.getElementById('sc-widget'));
-      widget.bind(SC.Widget.Events.READY, updateTrackInfo);
+      widget.bind(SC.Widget.Events.READY, () => {
+        updateTrackInfo();
+      });
       widget.bind(SC.Widget.Events.TRACK_CHANGE, updateTrackInfo);
     }
 
     function updateTrackInfo() {
+      if (!widget) return;
       widget.getCurrentSound((sound) => {
         if (sound) {
-          document.getElementById('title').textContent = sound.title;
-          currentTrackPermalink = sound.permalink_url;
+          document.getElementById('title').textContent = sound.title || "Now Playing";
+          currentTrackPermalink = sound.permalink_url || "";
           if (sound.artwork_url) {
             document.getElementById('artwork').src = sound.artwork_url.replace('-large', '-t500x500');
           }
@@ -132,4 +131,46 @@
 
     function togglePlay() {
       if (!widget) return;
-      if (localStorage.get​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​
+      if (localStorage.getItem('listenPreference')) {
+        widget.toggle();
+      } else {
+        document.getElementById('popup').style.display = 'block';
+      }
+    }
+
+    function chooseOption(option) {
+      if (document.getElementById('rememberToggle').checked) localStorage.setItem('listenPreference', option);
+      document.getElementById('popup').style.display = 'none';
+      if (widget) widget.play();
+    }
+
+    function prevTrack() { widget && widget.prev(); }
+    function nextTrack() { widget && widget.next(); }
+
+    function likeTrack() { currentTrackPermalink && window.open(currentTrackPermalink, '_blank'); }
+    function shareTrack() { currentTrackPermalink && window.open(currentTrackPermalink, '_blank'); }
+    function commentTrack() { currentTrackPermalink && window.open(currentTrackPermalink + "#comments", '_blank'); }
+
+    // Fiery waveform
+    const canvas = document.createElement('canvas');
+    canvas.width = 580; canvas.height = 110;
+    document.getElementById('waveform').appendChild(canvas);
+    const ctx = canvas.getContext('2d');
+
+    function drawFire() {
+      ctx.clearRect(0, 0, canvas.width, canvas.height);
+      const time = Date.now() / 70;
+      for (let i = 0; i < canvas.width; i += 4) {
+        const h = Math.sin(i/22 + time) * 35 + 70 + Math.random()*25;
+        ctx.fillStyle = `hsl(25, 100%, ${60 + Math.random()*30}%)`;
+        ctx.fillRect(i, canvas.height - h, 4, h);
+      }
+      requestAnimationFrame(drawFire);
+    }
+    drawFire();
+
+    // Start
+    window.onload = loadCurrentPlaylist;
+  </script>
+</body>
+</html>
