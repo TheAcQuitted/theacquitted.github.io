@@ -147,4 +147,22 @@
 
     const canvas = document.createElement('canvas');
     canvas.width = 580; canvas.height = 110;
-    document.getElementBy​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​
+    document.getElementById('waveform').appendChild(canvas);
+    const ctx = canvas.getContext('2d');
+
+    function drawFire() {
+      ctx.clearRect(0, 0, canvas.width, canvas.height);
+      const time = Date.now() / 70;
+      for (let i = 0; i < canvas.width; i += 4) {
+        const h = Math.sin(i/22 + time) * 35 + 70 + Math.random()*25;
+        ctx.fillStyle = `hsl(25, 100%, ${60 + Math.random()*30}%)`;
+        ctx.fillRect(i, canvas.height - h, 4, h);
+      }
+      requestAnimationFrame(drawFire);
+    }
+    drawFire();
+
+    window.onload = loadCurrentPlaylist;
+  </script>
+</body>
+</html>
