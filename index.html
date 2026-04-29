@@ -47,9 +47,9 @@
     </div>
 
     <div class="action-row">
-      <button class="action-btn" onclick="likeTrack()">Like</button>
-      <button class="action-btn" onclick="shareTrack()">Share</button>
-      <button class="action-btn" onclick="commentTrack()">Comment</button>
+      <button class="action-btn" onclick="likeTrack()">❤️ Like</button>
+      <button class="action-btn" onclick="shareTrack()">🔗 Share</button>
+      <button class="action-btn" onclick="commentTrack()">💬 Comment</button>
     </div>
   </div>
 
@@ -70,8 +70,7 @@
     let currentPlaylistIndex = 0;
 
     const playlists = [
-      // 🧬 DOUBLE HELIX IS NOW ONLY IN THIS PLAYLIST (Ascension) - removed standalone
-      { name: "🧬 VIRTUANON - ASCENSION (Double Helix included)", url: "https://soundcloud.com/theacquitted/sets/the-acquitted-virtuanon" },
+      { name: "🧬 VIRTUANON - ASCENSION (incl. Double Helix)", url: "https://soundcloud.com/theacquitted/sets/the-acquitted-virtuanon" },
       { name: "VIRTUANON - CONSPIRACY SOLUTIONIST", url: "https://soundcloud.com/theacquitted/sets/virtuanon-conspiracy" },
       { name: "VIRTUANON - FEEL THE FIRE", url: "https://soundcloud.com/theacquitted/sets/virtuanon" },
       { name: "FROGS AND FRENZ ACTIVATE", url: "https://soundcloud.com/theacquitted/sets/frogs-and-frenz" },
@@ -97,13 +96,9 @@
       iframe.src = widgetUrl;
 
       setTimeout(() => {
-        try {
-          widget = SC.Widget(iframe);
-          widget.bind(SC.Widget.Events.READY, () => {
-            updateTrackInfo();
-          });
-          widget.bind(SC.Widget.Events.TRACK_CHANGE, updateTrackInfo);
-        } catch(e) {}
+        widget = SC.Widget(iframe);
+        widget.bind(SC.Widget.Events.READY, updateTrackInfo);
+        widget.bind(SC.Widget.Events.TRACK_CHANGE, updateTrackInfo);
       }, 800);
     }
 
@@ -120,23 +115,13 @@
       });
     }
 
-    function prevPlaylist() {
-      currentPlaylistIndex = (currentPlaylistIndex - 1 + playlists.length) % playlists.length;
-      loadCurrentPlaylist();
-    }
-
-    function nextPlaylist() {
-      currentPlaylistIndex = (currentPlaylistIndex + 1) % playlists.length;
-      loadCurrentPlaylist();
-    }
+    function prevPlaylist() { currentPlaylistIndex = (currentPlaylistIndex - 1 + playlists.length) % playlists.length; loadCurrentPlaylist(); }
+    function nextPlaylist() { currentPlaylistIndex = (currentPlaylistIndex + 1) % playlists.length; loadCurrentPlaylist(); }
 
     function togglePlay() {
       if (!widget) return;
-      if (localStorage.getItem('listenPreference')) {
-        widget.toggle();
-      } else {
-        document.getElementById('popup').style.display = 'block';
-      }
+      if (localStorage.getItem('listenPreference')) widget.toggle();
+      else document.getElementById('popup').style.display = 'block';
     }
 
     function chooseOption(option) {
@@ -157,7 +142,6 @@
     canvas.width = 580; canvas.height = 110;
     document.getElementById('waveform').appendChild(canvas);
     const ctx = canvas.getContext('2d');
-
     function drawFire() {
       ctx.clearRect(0, 0, canvas.width, canvas.height);
       const time = Date.now() / 70;
