@@ -6,102 +6,36 @@
   <title>The AcQuitted Jukebox</title>
   <script src="https://w.soundcloud.com/player/api.js"></script>
   <style>
-    body { 
-      font-family: 'Courier New', monospace; 
-      background: #1a0f08; 
-      color: #ffd700; 
-      margin: 0; 
-      padding: 20px; 
-    }
-    #jukebox { 
-      max-width: 620px; 
-      margin: 20px auto; 
-      background: linear-gradient(#c0c0c0, #808080); 
-      border: 14px solid #222; 
-      border-radius: 25px; 
-      box-shadow: 0 25px 50px rgba(0,0,0,0.95), inset 0 0 80px rgba(255,215,0,0.4);
-      overflow: hidden;
-    }
-    .header { 
-      background: #111; 
-      color: #ff0000; 
-      text-align: center; 
-      padding: 10px; 
-      font-size: 20px; 
-      text-shadow: 0 0 10px #ff0000; 
-      border-bottom: 6px solid #ffd700;
-    }
-    #artwork { 
-      width: 100%; 
-      height: 260px; 
-      object-fit: cover; 
-      border-bottom: 6px solid #ffd700; 
-    }
-    h1 { text-align: center; margin: 12px 0 5px; color: #ffd700; font-size: 26px; text-shadow: 0 0 8px #ff0000; }
-    #title { text-align: center; margin: 5px 0; font-size: 18px; }
-    #waveform { height: 110px; background: #000; margin: 10px; border: 4px solid #333; }
-    .controls { 
-      display: flex; 
-      justify-content: center; 
-      align-items: center; 
-      gap: 20px; 
-      padding: 12px; 
-      background: #222;
-    }
-    button { 
-      background: #333; 
-      color: #ffd700; 
-      border: 4px solid #ffd700; 
-      border-radius: 12px; 
-      padding: 10px 18px; 
-      font-size: 26px; 
-      cursor: pointer; 
-    }
-    #playBtn { font-size: 38px; padding: 10px 26px; }
-    .action-row { 
-      display: flex; 
-      justify-content: center; 
-      gap: 25px; 
-      padding: 12px; 
-      background: #222; 
-    }
-    .action-btn { 
-      background: #222; 
-      color: #ffd700; 
-      border: 3px solid #ffd700; 
-      padding: 8px 16px; 
-      font-size: 18px; 
-      border-radius: 50px; 
-    }
-    iframe { 
-      width: 100%; 
-      max-width: 620px; 
-      margin: 15px auto; 
-      display: block; 
-      border: 0; 
-      height: 680px; 
-    }
-    #popup { 
-      position: fixed; top: 50%; left: 50%; 
-      transform: translate(-50%, -50%); 
-      background: #1a0f08; 
-      padding: 30px; 
-      border: 8px solid #ffd700; 
-      border-radius: 15px; 
-      box-shadow: 0 0 40px #ff0000; 
-      z-index: 1000; display: none; 
-      text-align: center;
-    }
+    body { font-family: 'Courier New', monospace; background: #1a0f08; color: #ffd700; margin: 0; padding: 20px; }
+    #jukebox { max-width: 620px; margin: 20px auto; background: linear-gradient(#c0c0c0, #a0a0a0, #808080); border: 16px solid #222; border-radius: 30px; box-shadow: 0 30px 60px rgba(0,0,0,0.95), inset 0 0 80px rgba(255,215,0,0.4); overflow: hidden; }
+    .header { background: #111; color: #ff2222; text-align: center; padding: 12px; font-size: 24px; font-weight: bold; text-shadow: 0 0 12px #ff0000; border-bottom: 8px solid #ffd700; }
+    #artwork { width: 100%; height: 280px; object-fit: cover; border-bottom: 8px solid #ffd700; }
+    .playlist-nav { display: flex; justify-content: space-between; align-items: center; padding: 8px 15px; background: #222; }
+    h1 { text-align: center; margin: 8px 0 4px; color: #ffd700; font-size: 26px; text-shadow: 0 0 10px #ff0000; }
+    #title { text-align: center; margin: 4px 0 10px; font-size: 18px; }
+    #waveform { height: 110px; background: #000; margin: 10px 15px; border: 5px solid #333; border-radius: 8px; }
+    .controls { display: flex; justify-content: center; gap: 25px; padding: 12px; background: #222; }
+    button { background: #333; color: #ffd700; border: 5px solid #ffd700; border-radius: 12px; padding: 10px 18px; font-size: 26px; cursor: pointer; }
+    #playBtn { font-size: 40px; }
+    .action-row { display: flex; justify-content: center; gap: 25px; padding: 12px; background: #222; }
+    .action-btn { background: #222; color: #ffd700; border: 4px solid #ffd700; padding: 10px 16px; font-size: 18px; border-radius: 50px; }
+    iframe { width: 100%; max-width: 620px; margin: 10px auto; display: block; border: 0; height: 680px; }
+    #popup { position: fixed; top: 50%; left: 50%; transform: translate(-50%, -50%); background: #1a0f08; padding: 35px; border: 10px solid #ffd700; border-radius: 20px; box-shadow: 0 0 50px #ff0000; z-index: 1000; display: none; text-align: center; }
   </style>
 </head>
 <body>
 
   <div id="jukebox">
-    <div class="header">● THE ACQUITTED DINER JUKEBOX ●</div>
+    <div class="header">THE ACQUITTED JUKEBOX</div>
     
     <img id="artwork" src="https://i1.sndcdn.com/avatars-000000000000-000000-large.jpg" alt="Album Art">
 
-    <h1>The AcQuitted</h1>
+    <div class="playlist-nav">
+      <button onclick="prevPlaylist()" style="background:none;border:none;font-size:32px;color:#ffd700;">◀</button>
+      <h1 id="playlist-name">Loading Playlists...</h1>
+      <button onclick="nextPlaylist()" style="background:none;border:none;font-size:32px;color:#ffd700;">▶</button>
+    </div>
+
     <h2 id="title">Loading track...</h2>
 
     <div id="waveform"></div>
@@ -119,55 +53,78 @@
     </div>
   </div>
 
-  <!-- Choice Popup -->
+  <!-- Popup -->
   <div id="popup">
-    <h3 style="color:#ffd700;">How would you like to listen?</h3>
+    <h3 style="color:#ffd700;">CHOOSE YOUR PLAYER</h3>
     <div style="display:flex; gap:15px; margin:25px 0;">
-      <button onclick="chooseOption('browser')" style="flex:1; padding:18px; background:#ff0000; color:white; border:none; border-radius:10px; font-size:17px;">Listen in Browser</button>
-      <button onclick="chooseOption('soundcloud')" style="flex:1; padding:18px; background:#ffd700; color:#000; border:none; border-radius:10px; font-size:17px;">Open SoundCloud</button>
+      <button onclick="chooseOption('browser')" style="flex:1; padding:18px; background:#ff2222; color:white; border:4px solid #ffd700; border-radius:12px;">LISTEN IN BROWSER</button>
+      <button onclick="chooseOption('soundcloud')" style="flex:1; padding:18px; background:#ffd700; color:#000; border:4px solid #ffd700; border-radius:12px;">OPEN SOUNDCLOUD</button>
     </div>
-    <label style="color:#ffd700;">
-      <input type="checkbox" id="rememberToggle"> Remember my choice
-    </label>
+    <label style="color:#ffd700;"><input type="checkbox" id="rememberToggle"> Remember my choice</label>
   </div>
 
-  <!-- Tall SoundCloud Widget -->
-  <iframe id="sc-widget" width="100%" height="680" scrolling="no" frameborder="no" 
-    src="https://w.soundcloud.com/player/?url=https://soundcloud.com/theacquitted&color=%23ff3c00&show_comments=true&show_user=true&show_reposts=false&visual=true">
-  </iframe>
+  <iframe id="sc-widget" width="100%" height="680" scrolling="no" frameborder="no" src=""></iframe>
 
   <script>
     let widget;
     let currentTrackPermalink = "";
+    let currentPlaylistIndex = 0;
 
-    window.addEventListener('load', () => {
-      widget = SC.Widget(document.getElementById('sc-widget'));
+    // === ALL 15 PLAYLISTS - VOCAL FIRST, GUITAR/INSTRUMENTAL LAST ===
+    const playlists = [
+      // VOCAL / THEMATIC (Virtuanon Series)
+      "https://soundcloud.com/theacquitted/virtuanon-double-helix",
+      "https://soundcloud.com/theacquitted/sets/virtuanon-conspiracy",
+      "https://soundcloud.com/theacquitted/sets/the-acquitted-virtuanon",
+      "https://soundcloud.com/theacquitted/sets/virtuanon",
+
+      // VOCAL / PATRIOTIC & OUTLAW COUNTRY
+      "https://soundcloud.com/theacquitted/sets/frogs-and-frenz",
+      "https://soundcloud.com/theacquitted/sets/maganonymous",
+      "https://soundcloud.com/theacquitted/sets/state-of-mind",
+      "https://soundcloud.com/theacquitted/sets/sweetleaf-of-mary",
+      "https://soundcloud.com/theacquitted/sets/under-cover",
+      "https://soundcloud.com/theacquitted/sets/three-seventy-nine",
+      "https://soundcloud.com/theacquitted/sets/shiners-moon",
+      "https://soundcloud.com/theacquitted/sets/country-tis-of-thee",
+      "https://soundcloud.com/theacquitted/sets/we-go-all",
+      "https://soundcloud.com/theacquitted/sets/the-road-is-my-home",
+
+      // GUITAR / INSTRUMENTAL LAST
+      "https://soundcloud.com/theacquitted/sets/the-acquitted-desert-sands"
+    ];
+
+    function loadCurrentPlaylist() {
+      const url = playlists[currentPlaylistIndex];
+      document.getElementById('playlist-name').textContent = url.split('/').pop().replace(/-/g, ' ').toUpperCase();
       
-      widget.bind(SC.Widget.Events.READY, () => {
-        updateCurrentTrack();
-      });
+      document.getElementById('sc-widget').src = `https://w.soundcloud.com/player/?url=${encodeURIComponent(url)}&color=%23ff3c00&show_comments=true&show_user=true&show_reposts=false&visual=true`;
+      
+      widget = SC.Widget(document.getElementById('sc-widget'));
+      widget.bind(SC.Widget.Events.READY, updateTrackInfo);
+      widget.bind(SC.Widget.Events.TRACK_CHANGE, updateTrackInfo);
+    }
 
-      widget.bind(SC.Widget.Events.PLAY, () => {
-        document.getElementById('playBtn').innerHTML = '⏸';
-        updateCurrentTrack();
-      });
-      widget.bind(SC.Widget.Events.PAUSE, () => document.getElementById('playBtn').innerHTML = '▶');
-      widget.bind(SC.Widget.Events.TRACK_CHANGE, () => updateCurrentTrack());
-    });
-
-    function updateCurrentTrack() {
+    function updateTrackInfo() {
       widget.getCurrentSound((sound) => {
         if (sound) {
           document.getElementById('title').textContent = sound.title;
           currentTrackPermalink = sound.permalink_url;
-          
-          // Update album artwork
-          const artwork = document.getElementById('artwork');
           if (sound.artwork_url) {
-            artwork.src = sound.artwork_url.replace('-large', '-t500x500');
+            document.getElementById('artwork').src = sound.artwork_url.replace('-large', '-t500x500');
           }
         }
       });
+    }
+
+    function prevPlaylist() {
+      currentPlaylistIndex = (currentPlaylistIndex - 1 + playlists.length) % playlists.length;
+      loadCurrentPlaylist();
+    }
+
+    function nextPlaylist() {
+      currentPlaylistIndex = (currentPlaylistIndex + 1) % playlists.length;
+      loadCurrentPlaylist();
     }
 
     function togglePlay() {
@@ -180,9 +137,7 @@
     }
 
     function chooseOption(option) {
-      if (document.getElementById('rememberToggle').checked) {
-        localStorage.setItem('listenPreference', option);
-      }
+      if (document.getElementById('rememberToggle').checked) localStorage.setItem('listenPreference', option);
       document.getElementById('popup').style.display = 'none';
       widget.play();
     }
@@ -211,6 +166,9 @@
       requestAnimationFrame(drawFire);
     }
     drawFire();
+
+    // Start
+    window.onload = loadCurrentPlaylist;
   </script>
 </body>
 </html>
