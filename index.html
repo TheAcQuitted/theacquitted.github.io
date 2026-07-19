@@ -1,189 +1,277 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>The AcQuitted Jukebox</title>
-  <script src="https://w.soundcloud.com/player/api.js"></script>
-  <style>
-    body { font-family: 'Courier New', monospace; background: #1a0f08; color: #ffd700; margin: 0; padding: 20px; }
-    #jukebox { max-width: 620px; margin: 20px auto; background: linear-gradient(#c0c0c0, #a0a0a0, #808080); border: 16px solid #222; border-radius: 30px; box-shadow: 0 30px 60px rgba(0,0,0,0.95), inset 0 0 80px rgba(255,215,0,0.4); overflow: hidden; transition: transform 0.4s ease, box-shadow 0.4s ease; }
-    #jukebox:hover { transform: scale(1.02); box-shadow: 0 40px 80px rgba(0,0,0,0.95); }
-    .header { background: #111; color: #ff2222; text-align: center; padding: 12px; font-size: 24px; font-weight: bold; text-shadow: 0 0 12px #ff0000; border-bottom: 8px solid #ffd700; }
-    #artwork { width: 100%; height: 280px; object-fit: cover; border-bottom: 8px solid #ffd700; transition: opacity 0.6s ease; }
-    .playlist-nav { display: flex; justify-content: space-between; align-items: center; padding: 8px 15px; background: #222; }
-    h1 { text-align: center; margin: 8px 0 4px; color: #ffd700; font-size: 26px; text-shadow: 0 0 10px #ff0000; }
-    #title { text-align: center; margin: 4px 0 10px; font-size: 18px; }
-    #waveform { height: 110px; background: #000; margin: 10px 15px; border: 5px solid #333; border-radius: 8px; overflow: hidden; }
-    .controls, .action-row { display: flex; justify-content: center; gap: 15px; padding: 12px; background: #222; flex-wrap: wrap; }
-    button { background: #333; color: #ffd700; border: 5px solid #ffd700; border-radius: 12px; padding: 10px 18px; font-size: 26px; cursor: pointer; transition: all 0.2s ease; }
-    button:hover { background: #ffd700; color: #111; transform: scale(1.1); }
-    #playBtn { font-size: 40px; }
-    .action-btn { background: #222; color: #ffd700; border: 4px solid #ffd700; padding: 10px 16px; font-size: 18px; border-radius: 50px; transition: all 0.2s ease; min-width: 100px; }
-    .action-btn:hover { background: #ffd700; color: #111; }
-    .toggle-on { background: #ff2222 !important; color: white !important; }
-    iframe { width: 100%; max-width: 620px; margin: 10px auto; display: block; border: 0; height: 680px; }
-    #popup { position: fixed; top: 50%; left: 50%; transform: translate(-50%, -50%); background: #1a0f08; padding: 35px; border: 10px solid #ffd700; border-radius: 20px; box-shadow: 0 0 50px #ff0000; z-index: 1000; display: none; text-align: center; }
-  </style>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>🔥 Your Epic Music Player</title>
+<style>
+  body {
+    background: #111;
+    color: #ffd700;
+    font-family: Arial, sans-serif;
+    margin: 0;
+    padding: 20px;
+    text-align: center;
+  }
+  h1 {
+    text-align: center;
+    margin: 8px 0 4px;
+    color: #ffd700;
+    font-size: 26px;
+    text-shadow: 0 0 10px #ff0000;
+  }
+  #title {
+    text-align: center;
+    margin: 4px 0 10px;
+    font-size: 18px;
+  }
+  #waveform {
+    height: 110px;
+    background: #000;
+    margin: 10px 15px;
+    border: 5px solid #333;
+    border-radius: 8px;
+    overflow: hidden;
+  }
+  .controls, .action-row {
+    display: flex;
+    justify-content: center;
+    gap: 15px;
+    padding: 12px;
+    background: #222;
+    flex-wrap: wrap;
+    border-radius: 12px;
+    margin: 10px 15px;
+  }
+  button {
+    background: #333;
+    color: #ffd700;
+    border: 5px solid #ffd700;
+    border-radius: 12px;
+    padding: 10px 18px;
+    font-size: 26px;
+    cursor: pointer;
+    transition: all 0.2s ease;
+  }
+  button:hover {
+    background: #ffd700;
+    color: #111;
+    transform: scale(1.1);
+  }
+  #playBtn {
+    font-size: 40px;
+  }
+  .action-btn {
+    background: #222;
+    color: #ffd700;
+    border: 4px solid #ffd700;
+    padding: 10px 16px;
+    font-size: 18px;
+    border-radius: 50px;
+    transition: all 0.2s ease;
+    min-width: 110px;
+  }
+  .action-btn:hover {
+    background: #ffd700;
+    color: #111;
+  }
+  .shuffle-btn {
+    font-size: 24px;
+    padding: 12px 20px;
+  }
+  .toggle-on {
+    background: #ff2222 !important;
+    color: white !important;
+  }
+</style>
 </head>
 <body>
 
-  <div id="jukebox">
-    <div class="header">THE ACQUITTED JUKEBOX</div>
-    
-    <img id="artwork" src="https://i1.sndcdn.com/avatars-000000000000-000000-large.jpg" alt="Album Art">
+<h1>🔥 YOUR MUSIC PLAYER</h1>
+<h2 id="title">Loading track...</h2>
 
-    <div class="playlist-nav">
-      <button onclick="prevPlaylist()" style="background:none;border:none;font-size:32px;color:#ffd700;">◀</button>
-      <h1 id="playlist-name">Loading...</h1>
-      <button onclick="nextPlaylist()" style="background:none;border:none;font-size:32px;color:#ffd700;">▶</button>
-    </div>
+<div id="waveform"></div>
 
-    <h2 id="title">Loading track...</h2>
+<div class="controls">
+  <button onclick="prevPlaylist()">⏮️</button>
+  <button id="playBtn" onclick="togglePlay()">▶️</button>
+  <button onclick="nextPlaylist()">⏭️</button>
+</div>
 
-    <div id="waveform"></div>
+<div class="action-row">
+  <button class="action-btn shuffle-btn" onclick="shufflePlaylist()">🔀 SHUFFLE</button>
+  <button id="repeatBtn" class="action-btn" onclick="toggleRepeat()">🔁 REPEAT OFF</button>
+  <button class="action-btn" onclick="likeTrack()">❤️ Like</button>
+  <button class="action-btn" onclick="shareTrack()">🔗 Share</button>
+  <button class="action-btn" onclick="commentTrack()">💬 Comment</button>
+  <button class="action-btn" onclick="donate()">💰 Donate to $72turtle72</button>
+</div>
 
-    <div class="controls">
-      <button onclick="prevTrack()">⏮</button>
-      <button id="playBtn" onclick="togglePlay()">▶</button>
-      <button onclick="nextTrack()">⏭</button>
-    </div>
+<script src="https://w.soundcloud.com/player/api.js"></script>
+<script>
+// ==================== ADD NEW SONGS / SETS HERE ====================
+// 1. To add tracks to an EXISTING set → just add them on SoundCloud.com (player updates automatically!)
+// 2. To add a BRAND NEW playlist/set → add a line below like the example
+const playlists = [
+  { 
+    name: "🧬 VIRTUANON - ASCENSION", 
+    url: "https://soundcloud.com/theacquitted/sets/the-acquitted-virtuanon" 
+  }
+  // Example of how to add a new one:
+  // { name: "My New Playlist", url: "https://soundcloud.com/yourusername/sets/your-new-set" },
+];
 
-    <div class="action-row">
-      <button class="action-btn shuffle-btn" onclick="shufflePlaylist()">🔀 SHUFFLE</button>
-      <button id="repeatBtn" class="action-btn" onclick="toggleRepeat()">🔁 REPEAT OFF</button>
-      <button class="action-btn" onclick="likeTrack()">❤️ Like</button>
-      <button class="action-btn" onclick="shareTrack()">🔗 Share</button>
-      <button class="action-btn" onclick="commentTrack()">💬 Comment</button>
-    </div>
-  </div>
+// ==================== VARIABLES ====================
+let widget;
+let currentPlaylistIndex = 0;
+let repeatMode = false;
+let currentTrackPermalink = "";
 
-  <div id="popup">
-    <h3 style="color:#ffd700;">CHOOSE YOUR PLAYER</h3>
-    <div style="display:flex; gap:15px; margin:25px 0;">
-      <button onclick="chooseOption('browser')" style="flex:1; padding:18px; background:#ff2222; color:white; border:4px solid #ffd700; border-radius:12px;">LISTEN IN BROWSER</button>
-      <button onclick="chooseOption('soundcloud')" style="flex:1; padding:18px; background:#ffd700; color:#000; border:4px solid #ffd700; border-radius:12px;">OPEN SOUNDCLOUD</button>
-    </div>
-    <label style="color:#ffd700;"><input type="checkbox" id="rememberToggle"> Remember my choice</label>
-  </div>
+// ==================== LOAD PLAYLIST ====================
+function loadPlaylist(index) {
+  if (!playlists[index]) return;
+  currentPlaylistIndex = index;
 
-  <iframe id="sc-widget" width="100%" height="680" scrolling="no" frameborder="no" src=""></iframe>
+  const container = document.getElementById('waveform');
+  container.innerHTML = '';
 
-  <script>
-    let widget;
-    let currentTrackPermalink = "";
-    let currentPlaylistIndex = 0;
-    let repeatMode = false;
+  const iframe = document.createElement('iframe');
+  iframe.id = 'sc-widget';
+  iframe.width = "100%";
+  iframe.height = "680";
+  iframe.scrolling = "no";
+  iframe.frameBorder = "no";
+  iframe.src = `https://w.soundcloud.com/player/?url=${encodeURIComponent(playlists[index].url)}&color=%23ff0000&auto_play=false&hide_related=false&show_comments=true&show_user=true&show_reposts=false&show_teaser=true`;
+  container.appendChild(iframe);
 
-    const playlists = [
-      { name: "🧬 VIRTUANON - ASCENSION", url: "https://soundcloud.com/theacquitted/sets/the-acquitted-virtuanon" },
-      { name: "VIRTUANON - CONSPIRACY SOLUTIONIST", url: "https://soundcloud.com/theacquitted/sets/virtuanon-conspiracy" },
-      { name: "VIRTUANON - FEEL THE FIRE", url: "https://soundcloud.com/theacquitted/sets/virtuanon" },
-      { name: "FROGS AND FRENZ ACTIVATE", url: "https://soundcloud.com/theacquitted/sets/frogs-and-frenz" },
-      { name: "MAGANONYMOUS", url: "https://soundcloud.com/theacquitted/sets/maganonymous" },
-      { name: "STATES OF MIND", url: "https://soundcloud.com/theacquitted/sets/state-of-mind" },
-      { name: "SWEETLEAF OF MARY", url: "https://soundcloud.com/theacquitted/sets/sweetleaf-of-mary" },
-      { name: "UNDER COVER", url: "https://soundcloud.com/theacquitted/sets/under-cover" },
-      { name: "THREE SEVENTY NINE", url: "https://soundcloud.com/theacquitted/sets/three-seventy-nine" },
-      { name: "SHINERS MOON", url: "https://soundcloud.com/theacquitted/sets/shiners-moon" },
-      { name: "COUNTRY TIS OF THEE", url: "https://soundcloud.com/theacquitted/sets/country-tis-of-thee" },
-      { name: "🎶 WE GO ALL! (Full Album)", url: "https://soundcloud.com/theacquitted/sets/acquitted-double-album-self" },
-      { name: "THE ROAD IS MY HOME", url: "https://soundcloud.com/theacquitted/sets/the-road-is-my-home" },
-      { name: "DESERT SANDS", url: "https://soundcloud.com/theacquitted/sets/the-acquitted-desert-sands" }
-    ];
+  setTimeout(() => {
+    widget = SC.Widget(iframe);
 
-    function loadCurrentPlaylist() {
-      const pl = playlists[currentPlaylistIndex];
-      document.getElementById('playlist-name').textContent = pl.name;
+    widget.bind(SC.Widget.Events.READY, () => {
+      document.getElementById('title').textContent = playlists[index].name;
+      updateTrackInfo();
+    });
 
-      const widgetUrl = `https://w.soundcloud.com/player/?url=${encodeURIComponent(pl.url)}&color=%23ff3c00&auto_play=false&hide_related=true&show_comments=false&show_user=true&visual=true&single_active=true`;
+    widget.bind(SC.Widget.Events.TRACK_CHANGE, updateTrackInfo);
+    widget.bind(SC.Widget.Events.FINISH, onTrackFinish);
+  }, 800);
+}
 
-      document.getElementById('sc-widget').src = widgetUrl;
-
-      setTimeout(() => {
-        widget = SC.Widget(document.getElementById('sc-widget'));
-        widget.bind(SC.Widget.Events.READY, updateTrackInfo);
-        widget.bind(SC.Widget.Events.TRACK_CHANGE, updateTrackInfo);
-        widget.bind(SC.Widget.Events.FINISH, onTrackFinish);
-      }, 800);
+// ==================== TRACK INFO & CONTROLS ====================
+function updateTrackInfo() {
+  if (!widget) return;
+  widget.getCurrentSound((sound) => {
+    if (sound && sound.permalink_url) {
+      currentTrackPermalink = sound.permalink_url;
+      document.getElementById('title').textContent = sound.title || playlists[currentPlaylistIndex].name;
     }
+  });
+}
 
-    function onTrackFinish() {
-      if (repeatMode) {
-        widget.skip(0); // Jump back to first track of current playlist
-      }
+function onTrackFinish() {
+  if (repeatMode && widget) {
+    widget.skip(0);
+  }
+}
+
+function togglePlay() {
+  if (!widget) return;
+  widget.toggle();
+  const btn = document.getElementById('playBtn');
+  btn.textContent = btn.textContent === '▶️' ? '⏸️' : '▶️';
+}
+
+function prevPlaylist() {
+  let newIndex = currentPlaylistIndex - 1;
+  if (newIndex < 0) newIndex = playlists.length - 1;
+  loadPlaylist(newIndex);
+}
+
+function nextPlaylist() {
+  let newIndex = currentPlaylistIndex + 1;
+  if (newIndex >= playlists.length) newIndex = 0;
+  loadPlaylist(newIndex);
+}
+
+function shufflePlaylist() {
+  playlists.sort(() => Math.random() - 0.5);
+  currentPlaylistIndex = 0;
+  loadPlaylist(0);
+  alert("Playlist shuffled!");
+}
+
+function toggleRepeat() {
+  repeatMode = !repeatMode;
+  const btn = document.getElementById('repeatBtn');
+  btn.textContent = repeatMode ? "🔁 REPEAT ON" : "🔁 REPEAT OFF";
+  if (repeatMode) btn.classList.add('toggle-on');
+  else btn.classList.remove('toggle-on');
+}
+
+function likeTrack() {
+  if (currentTrackPermalink) {
+    alert("❤️ Thanks! Opening track so you can like it.");
+    window.open(currentTrackPermalink, '_blank');
+  }
+}
+
+function shareTrack() {
+  if (currentTrackPermalink) {
+    window.open(currentTrackPermalink, '_blank');
+  } else {
+    alert("No track loaded yet");
+  }
+}
+
+function commentTrack() {
+  if (currentTrackPermalink) {
+    window.open(currentTrackPermalink + "#comments", '_blank');
+  }
+}
+
+function donate() {
+  window.open('https://cash.app/$72turtle72', '_blank');
+}
+
+// ==================== WAVEFORM ====================
+function createWaveform() {
+  const container = document.getElementById('waveform');
+  const canvas = document.createElement('canvas');
+  canvas.width = 580;
+  canvas.height = 110;
+  container.appendChild(canvas);
+
+  const ctx = canvas.getContext('2d');
+
+  function draw() {
+    ctx.fillStyle = '#000';
+    ctx.fillRect(0, 0, canvas.width, canvas.height);
+
+    ctx.fillStyle = '#ffd700';
+    const barWidth = 8;
+    const gap = 4;
+    const bars = 60;
+
+    for (let i = 0; i < bars; i++) {
+      const height = Math.random() * 90 + 10;
+      ctx.fillRect(i * (barWidth + gap), (canvas.height - height) / 2, barWidth, height);
     }
+    requestAnimationFrame(draw);
+  }
+  draw();
+}
 
-    function toggleRepeat() {
-      repeatMode = !repeatMode;
-      const btn = document.getElementById('repeatBtn');
-      btn.textContent = repeatMode ? "🔁 REPEAT ON" : "🔁 REPEAT OFF";
-      if (repeatMode) btn.classList.add('toggle-on');
-      else btn.classList.remove('toggle-on');
-    }
+// ==================== START EVERYTHING ====================
+window.onload = function() {
+  createWaveform();
+  
+  if (playlists.length > 0) {
+    loadPlaylist(0);
+  } else {
+    document.getElementById('title').textContent = "Add some playlists above!";
+  }
+};
+</script>
 
-    // Rest of your functions (updateTrackInfo, shuffle, nav, etc.) remain the same
-    function updateTrackInfo() {
-      if (!widget) return;
-      widget.getCurrentSound((sound) => {
-        if (sound) {
-          document.getElementById('title').textContent = sound.title || "Now Playing";
-          currentTrackPermalink = sound.permalink_url || "";
-          if (sound.artwork_url) {
-            document.getElementById('artwork').src = sound.artwork_url.replace('-large', '-t500x500');
-          }
-        }
-      });
-    }
-
-    function prevPlaylist() { currentPlaylistIndex = (currentPlaylistIndex - 1 + playlists.length) % playlists.length; loadCurrentPlaylist(); }
-    function nextPlaylist() { currentPlaylistIndex = (currentPlaylistIndex + 1) % playlists.length; loadCurrentPlaylist(); }
-
-    function shufflePlaylist() {
-      currentPlaylistIndex = Math.floor(Math.random() * playlists.length);
-      loadCurrentPlaylist();
-    }
-
-    function togglePlay() {
-      if (!widget) return;
-      if (localStorage.getItem('listenPreference')) widget.toggle();
-      else document.getElementById('popup').style.display = 'block';
-    }
-
-    function chooseOption(option) {
-      if (document.getElementById('rememberToggle').checked) localStorage.setItem('listenPreference', option);
-      document.getElementById('popup').style.display = 'none';
-      if (widget) widget.play();
-    }
-
-    function prevTrack() { widget && widget.prev(); }
-    function nextTrack() { widget && widget.next(); }
-
-    function likeTrack() { currentTrackPermalink && window.open(currentTrackPermalink, '_blank'); }
-    function shareTrack() { currentTrackPermalink && window.open(currentTrackPermalink, '_blank'); }
-    function commentTrack() { currentTrackPermalink && window.open(currentTrackPermalink + "#comments", '_blank'); }
-
-    // Fire waveform
-    const canvas = document.createElement('canvas');
-    canvas.width = 580; canvas.height = 110;
-    document.getElementById('waveform').appendChild(canvas);
-    const ctx = canvas.getContext('2d');
-    function drawFire() {
-      ctx.clearRect(0, 0, canvas.width, canvas.height);
-      const time = Date.now() / 70;
-      for (let i = 0; i < canvas.width; i += 4) {
-        const h = Math.sin(i/22 + time) * 35 + 70 + Math.random()*25;
-        ctx.fillStyle = `hsl(25, 100%, ${60 + Math.random()*30}%)`;
-        ctx.fillRect(i, canvas.height - h, 4, h);
-      }
-      requestAnimationFrame(drawFire);
-    }
-    drawFire();
-
-    window.onload = () => {
-      currentPlaylistIndex = Math.floor(Math.random() * playlists.length);
-      loadCurrentPlaylist();
-    };
-  </script>
 </body>
 </html>
