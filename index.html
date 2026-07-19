@@ -3,23 +3,28 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>The Acquitted - Jukebox</title>
+    <title>The Acquitted Jukebox</title>
     <script src="https://w.soundcloud.com/player/api.js" defer></script>
     <style>
-        body { margin:0; padding:20px; font-family:system-ui; background:#111; color:#fff; text-align:center; }
-        h1 { color:#ff4500; text-shadow:0 0 15px #ffcc00; margin:10px 0; }
-        .player-container { max-width:620px; margin:15px auto; background:#1a1a1a; border:3px solid #ffcc00; border-radius:12px; padding:15px; }
-        iframe { width:100%; height:520px; border:none; border-radius:8px; } /* Taller to show full tracklist */
-        .album-nav { display:flex; justify-content:center; gap:10px; flex-wrap:wrap; margin:15px 0; }
-        .nav-btn { padding:10px 20px; border:2px solid #ffcc00; background:transparent; color:#ffcc00; border-radius:30px; cursor:pointer; font-size:14px; }
+        body { margin:0; padding:10px; font-family:system-ui; background:#111; color:#fff; text-align:center; }
+        .header-img { width:100%; max-height:200px; object-fit:cover; border-radius:8px; }
+        h1 { color:#ff4500; text-shadow:0 0 15px #ffcc00; margin:10px 0 5px; font-size:1.8em; }
+        .album-nav { display:flex; overflow-x:auto; gap:10px; padding:10px 0; scrollbar-width:none; }
+        .album-nav::-webkit-scrollbar { display:none; }
+        .nav-btn { padding:10px 20px; border:2px solid #ffcc00; background:transparent; color:#ffcc00; border-radius:30px; white-space:nowrap; flex-shrink:0; cursor:pointer; }
         .nav-btn.active { background:#ffcc00; color:#000; }
-        .controls, .action-row { display:flex; justify-content:center; gap:15px; margin:20px 0; flex-wrap:wrap; }
-        .btn, .action-btn { padding:12px 24px; border:3px solid #ffcc00; background:transparent; color:#ffcc00; border-radius:50px; cursor:pointer; font-weight:bold; }
-        .btn:hover, .action-btn:hover { background:#ffcc00; color:#000; }
-        .donate { background:#00c853 !important; color:white !important; border-color:#00c853; }
+        .player-container { max-width:620px; margin:15px auto; background:#1a1a1a; border:3px solid #ffcc00; border-radius:12px; padding:15px; }
+        iframe { width:100%; height:420px; border:none; border-radius:8px; }
+        .controls { display:flex; justify-content:center; gap:20px; margin:20px 0; }
+        .btn { width:70px; height:70px; border:3px solid #ffcc00; background:transparent; color:#ffcc00; border-radius:12px; font-size:28px; cursor:pointer; }
+        .action-row { display:flex; justify-content:center; gap:12px; flex-wrap:wrap; margin:15px 0; }
+        .action-btn { padding:12px 24px; border:3px solid #ffcc00; background:transparent; color:#ffcc00; border-radius:50px; cursor:pointer; font-weight:bold; }
+        .donate { background:#00c853 !important; color:white !important; }
     </style>
 </head>
 <body>
+    <img src="YOUR_CAR_IMAGE_URL_HERE" class="header-img" alt="Header"> <!-- Replace with your red car image URL -->
+
     <h1>THE ACQUITTED JUKEBOX</h1>
 
     <div class="album-nav" id="album-nav"></div>
@@ -44,11 +49,12 @@
     </div>
 
     <script>
-        // === ADD YOUR ALBUMS/PLAYLISTS HERE ===
+        // === ADD ALL 21 ALBUMS HERE ===
         const playlists = [
             { name: "Red Rock Prayer", url: "https://soundcloud.com/theacquitted/red-rock-prayer" },
-            { name: "Double Helix", url: "https://soundcloud.com/theacquitted/sets/your-double-helix-set" }, // Replace with real set URLs
-            // Add more albums here — they auto-update when you add tracks on SoundCloud
+            { name: "Double Helix", url: "https://soundcloud.com/theacquitted/sets/double-helix" },
+            // Add the remaining 19 albums here in the same format
+            // Example: { name: "Album Name", url: "https://soundcloud.com/theacquitted/sets/album-set" },
         ];
 
         let currentIndex = 0;
@@ -57,14 +63,13 @@
         function loadAlbum(index) {
             currentIndex = index;
             const album = playlists[index];
-            document.getElementById('soundcloud-player').src = 
-                `https://w.soundcloud.com/player/?url=${encodeURIComponent(album.url)}&color=%23ffcc00&auto_play=false&visual=true&show_comments=true&single_active=true`;
-            
-            document.querySelectorAll('.nav-btn').forEach((b,i) => b.classList.toggle('active', i===index));
-            setTimeout(() => widget = SC.Widget(document.getElementById('soundcloud-player')), 600);
+            const iframe = document.getElementById('soundcloud-player');
+            iframe.src = `https://w.soundcloud.com/player/?url=${encodeURIComponent(album.url)}&color=%23ffcc00&auto_play=false&visual=true&show_comments=true`;
+            setTimeout(() => widget = SC.Widget(iframe), 400);
+            updateNav();
         }
 
-        function createNav() {
+        function updateNav() {
             const nav = document.getElementById('album-nav');
             nav.innerHTML = '';
             playlists.forEach((album, i) => {
@@ -72,9 +77,9 @@
                 btn.className = 'nav-btn';
                 btn.textContent = album.name;
                 btn.onclick = () => loadAlbum(i);
+                if (i === currentIndex) btn.classList.add('active');
                 nav.appendChild(btn);
             });
-            loadAlbum(0);
         }
 
         function togglePlay() { if (widget) widget.toggle(); }
@@ -82,12 +87,11 @@
         function next() { if (widget) widget.next(); }
         function toggleShuffle() { alert('Shuffle ON 🔥'); }
         function toggleRepeat() { alert('Repeat toggled'); }
-        function shareCurrent() { 
-            navigator.clipboard.writeText(window.location.href);
-            alert('Album link copied!');
-        }
+        function shareCurrent() { navigator.clipboard.writeText(window.location.href); alert('Link copied!'); }
 
-        window.onload = createNav;
+        window.onload = () => {
+            if (playlists.length > 0) loadAlbum(0);
+        };
     </script>
 </body>
 </html>
