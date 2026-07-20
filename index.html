@@ -76,7 +76,7 @@
             currentIndex = index;
             const album = playlists[index];
             const iframe = document.getElementById('soundcloud-player');
-            iframe.src = `https://w.soundcloud.com/player/?url=${encodeURIComponent(album.url)}&color=%23ffcc00&auto_play=false&visual=true&show_comments=true`;
+            iframe.src = `https://w.soundcloud.com/player/?url=${encodeURIComponent(album.url)}&color=%23ffcc00&auto_play=false&visual=true&show_comments=true&show_artwork=true`;
             setTimeout(() => widget = SC.Widget(iframe), 400);
             updateNav();
         }
