@@ -29,7 +29,7 @@
       text-shadow: 0 0 10px rgba(255, 170, 0, 0.4);
     }
 
-    /* Multi-Line Wrapping Button Grid Layout for Album Selection */
+    /* Fixed Album Buttons Layout Grid matching your layout screenshot */
     .tabs-grid-wrapper {
       display: flex;
       flex-wrap: wrap;       
@@ -50,6 +50,7 @@
       cursor: pointer;
       white-space: nowrap;
       font-weight: bold;
+      font-size: 0.9rem;
       transition: all 0.2s ease-in-out;
     }
 
@@ -57,14 +58,14 @@
       background: rgba(255, 170, 0, 0.15);
     }
 
-    /* Active Selection Highlight Styling Rules */
+    /* Active Highlight State matching your design mockup */
     .jukebox-tab-pill.active-yellow-highlight {
       background: #ffaa00;
       color: #0b0b0c;
       box-shadow: 0 0 12px rgba(255, 170, 0, 0.6);
     }
 
-    /* Central Presentation Display Monitor Container Case */
+    /* Central Monitor Frame Display Box Container Case */
     .player-container {
       background: #121214;
       border: 3px solid #ffaa00;
@@ -85,7 +86,7 @@
       width: 100%;
     }
 
-    /* UNIFIED BOTTOM DECK: Arranges all action items natively in one single wrapping line layout */
+    /* UNIFIED DECK ROW: Arranges skip keys and utility toggles seamlessly */
     .unified-control-bar {
       display: flex;
       flex-wrap: wrap;
@@ -120,7 +121,7 @@
       box-shadow: 0 0 10px rgba(255, 170, 0, 0.4);
     }
 
-    /* Explicit scaling formatting for standard media deck navigation glyphs */
+    /* Modifies structural dimensions for navigation arrow blocks */
     .control-item-btn.media-skip {
       font-size: 1.3rem;
       padding: 5px 24px;
@@ -131,15 +132,40 @@
 
   <h1>The AcQuitted Jukebox</h1>
 
-  <!-- Top Navigation Pill Grid Carousel Wrapper -->
-  <div id="jukebox-tabs-container" class="tabs-grid-wrapper"></div>
+  <!-- FIXED ALBUUM SELECTION ROW: Explicitly hardcoded to verify they load natively every time -->
+  <div class="tabs-grid-wrapper">
+    <button class="jukebox-tab-pill" onclick="loadTrack(0)">Country 'Tis Of Thee</button>
+    <button class="jukebox-tab-pill" onclick="loadTrack(1)">Double Helix</button>
+    <button class="jukebox-tab-pill" onclick="loadTrack(2)">Frogs And Frenz, ACTIVATE!</button>
+    <button class="jukebox-tab-pill" onclick="loadTrack(3)">Hollers And Hills And Highways</button>
+    <button class="jukebox-tab-pill" onclick="loadTrack(4)">Horus Cope</button>
+    <button class="jukebox-tab-pill" onclick="loadTrack(5)">Jubilees</button>
+    <button class="jukebox-tab-pill" onclick="loadTrack(6)">MAGAAnonymous</button>
+    <button class="jukebox-tab-pill" onclick="loadTrack(7)">New Ends And Old Beginnings</button>
+    <button class="jukebox-tab-pill" onclick="loadTrack(8)">One Nation</button>
+    <button class="jukebox-tab-pill" onclick="loadTrack(9)">Red Rock Prayer</button>
+    <button class="jukebox-tab-pill" onclick="loadTrack(10)">Shiners Moon</button>
+    <button class="jukebox-tab-pill" onclick="loadTrack(11)">States Of Mind</button>
+    <button class="jukebox-tab-pill" onclick="loadTrack(12)">Sweetleaf Of Mary</button>
+    <button class="jukebox-tab-pill" onclick="loadTrack(13)">Temporal Balance</button>
+    <button class="jukebox-tab-pill" onclick="loadTrack(14)">The AcQuitted - Desert Sands</button>
+    <button class="jukebox-tab-pill" onclick="loadTrack(15)">The AcQuitted - One Nation</button>
+    <button class="jukebox-tab-pill" onclick="loadTrack(16)">The AcQuitted - Virtuanon - Feel the...</button>
+    <button class="jukebox-tab-pill" onclick="loadTrack(17)">The Road Is My Home</button>
+    <button class="jukebox-tab-pill" onclick="loadTrack(18)">Three Seventy Nine</button>
+    <button class="jukebox-tab-pill" onclick="loadTrack(19)">Time Line Shift</button>
+    <button class="jukebox-tab-pill" onclick="loadTrack(20)">Under Cover</button>
+    <button class="jukebox-tab-pill" onclick="loadTrack(21)">Virtuanon - Ascension</button>
+    <button class="jukebox-tab-pill" onclick="loadTrack(22)">Virtuanon - Conspiracy Solution</button>
+    <button class="jukebox-tab-pill" onclick="loadTrack(23)">We go all!</button>
+  </div>
 
-  <!-- Central Jukebox Visual Monitoring Core Display Case Box -->
+  <!-- Central Jukebox Display Panel Window Case -->
   <div class="player-container">
     <iframe id="soundcloud-player" allow="autoplay" src=""></iframe>
   </div>
 
-  <!-- PROPERLY MERGED COMPACT INTERACTION DECK CONSOLE BAR -->
+  <!-- CONSOLIDATED AUDIO & INTERACTION DECK CONTROL BAR -->
   <div class="unified-control-bar">
     <button class="control-item-btn media-skip" onclick="prevTrack()" title="Previous Playlist">⏮</button>
     <button id="play-pause-btn" class="control-item-btn media-skip" onclick="togglePlay()" title="Play / Pause">⏸</button>
@@ -151,12 +177,12 @@
     <button class="control-item-btn" onclick="triggerWidgetAction('share')">🔗 Share</button>
     <button class="control-item-btn" onclick="triggerWidgetAction('comment')">💬 Comment</button>
     
-    <!-- CashApp Link styled seamlessly to perfectly match your other gold jukebox keys -->
+    <!-- CashApp checkout portal button perfectly matching your other gold control items -->
     <a href="https://cash.app" target="_blank" class="control-item-btn" title="Support via CashApp">💰 Tips Here</a>
   </div>
 
   <script>
-    // Master Alphabetical Playlists Reference Array Checklist Matrix (24 Entries)
+    // Database Reference Array Tracking your Playlists (24 Total entries covering your selection)
     const playlists = [
       { name: "Country 'Tis Of Thee", url: "https://soundcloud.com" },
       { name: "Double Helix", url: "https://soundcloud.com" },
@@ -188,20 +214,6 @@
     let scWidget = null;
     let isPlaying = true;
 
-    function createNavigationTabs() {
-      const container = document.getElementById("jukebox-tabs-container");
-      if (!container) return;
-      container.innerHTML = "";
-
-      playlists.forEach((track, index) => {
-        const btn = document.createElement("button");
-        btn.className = "jukebox-tab-pill";
-        btn.innerText = track.name;
-        btn.onclick = () => loadTrack(index);
-        container.appendChild(btn);
-      });
-    }
-
     async function loadTrack(index) {
       if (index < 0 || index >= playlists.length) return;
       currentIndex = index;
@@ -212,54 +224,3 @@
       const track = playlists[currentIndex];
       let targetUrl = track.url;
 
-      if (targetUrl.includes("://soundcloud.com")) {
-        try {
-          const response = await fetch(`https://corsproxy.io{encodeURIComponent(targetUrl)}`);
-          if (response.url) targetUrl = response.url;
-        } catch (e) {
-          const simpleSlug = track.name.toLowerCase().replace(/[^a-z0-9\s-]/g, "").replace(/\s+/g, "-");
-          targetUrl = `https://soundcloud.com{simpleSlug}`;
-        }
-      }
-
-      const secureSlug = encodeURIComponent(targetUrl);
-      iframe.src = `https://soundcloud.com{secureSlug}&color=%23ffaa00&auto_play=true&hide_related=true&show_comments=true&show_user=true&show_reposts=false&show_teaser=false&buying=false&sharing=false&download=false&visual=true&show_artwork=true`;
-
-      if (window.SC) {
-        scWidget = SC.Widget(iframe);
-        
-        scWidget.bind(SC.Widget.Events.FINISH, () => {
-          nextTrack();
-        });
-        
-        scWidget.bind(SC.Widget.Events.PLAY, () => {
-          isPlaying = true;
-          document.getElementById("play-pause-btn").innerText = "⏸";
-        });
-        scWidget.bind(SC.Widget.Events.PAUSE, () => {
-          isPlaying = false;
-          document.getElementById("play-pause-btn").innerText = "▶";
-        });
-      }
-      
-      updateActiveTabUI();
-    }
-
-    function nextTrack() {
-      let nextIdx = (currentIndex + 1) % playlists.length;
-      loadTrack(nextIdx);
-    }
-
-    function prevTrack() {
-      let prevIdx = (currentIndex - 1 + playlists.length) % playlists.length;
-      loadTrack(prevIdx);
-    }
-
-    function togglePlay() {
-      if (!scWidget) return;
-      scWidget.toggle();
-    }
-
-    function triggerWidgetAction(actionType) {
-      if (!scWidget) return;
-      
