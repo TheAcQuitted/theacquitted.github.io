@@ -4,10 +4,7 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>The AcQuitted Jukebox</title>
-  
-  <!-- Mandatory SoundCloud Embed Widget API Library -->
-  <script src="https://soundcloud.com"></script>
-
+  <script src="https://w.soundcloud.com/player/api.js" defer></script>
   <style>
     body {
       background-color: #0b0b0c;
@@ -29,16 +26,20 @@
       text-shadow: 0 0 10px rgba(255, 170, 0, 0.4);
     }
 
-    /* Fixed Album Buttons Layout Grid matching your layout screenshot */
     .tabs-grid-wrapper {
       display: flex;
-      flex-wrap: wrap;       
-      justify-content: center;
+      flex-direction: row;
+      flex-wrap: nowrap;
+      justify-content: flex-start;
       gap: 12px;
       max-width: 950px;
       width: 100%;
-      padding: 10px;
+      padding: 12px;
       margin-bottom: 25px;
+      overflow-x: auto;
+      scrollbar-width: thin;
+      scrollbar-color: #ffaa00 #161618;
+      -webkit-overflow-scrolling: touch;
     }
 
     .jukebox-tab-pill {
@@ -52,20 +53,19 @@
       font-weight: bold;
       font-size: 0.9rem;
       transition: all 0.2s ease-in-out;
+      flex-shrink: 0;
     }
 
     .jukebox-tab-pill:hover {
       background: rgba(255, 170, 0, 0.15);
     }
 
-    /* Active Highlight State matching your design mockup */
     .jukebox-tab-pill.active-yellow-highlight {
       background: #ffaa00;
       color: #0b0b0c;
       box-shadow: 0 0 12px rgba(255, 170, 0, 0.6);
     }
 
-    /* Central Monitor Frame Display Box Container Case */
     .player-container {
       background: #121214;
       border: 3px solid #ffaa00;
@@ -74,7 +74,6 @@
       max-width: 800px;
       width: 100%;
       box-shadow: 0 10px 30px rgba(0,0,0,0.7);
-      box-sizing: border-box;
       margin-bottom: 25px;
     }
 
@@ -82,11 +81,10 @@
       border: none;
       border-radius: 6px;
       background-color: #1a1a1c;
-      height: 450px; 
+      height: 450px;
       width: 100%;
     }
 
-    /* UNIFIED DECK ROW: Arranges skip keys and utility toggles seamlessly */
     .unified-control-bar {
       display: flex;
       flex-wrap: wrap;
@@ -121,7 +119,6 @@
       box-shadow: 0 0 10px rgba(255, 170, 0, 0.4);
     }
 
-    /* Modifies structural dimensions for navigation arrow blocks */
     .control-item-btn.media-skip {
       font-size: 1.3rem;
       padding: 5px 24px;
@@ -132,44 +129,16 @@
 
   <h1>The AcQuitted Jukebox</h1>
 
-  <!-- FIXED ALBUUM SELECTION ROW: Explicitly hardcoded to verify they load natively every time -->
-  <div class="tabs-grid-wrapper">
-    <button class="jukebox-tab-pill" onclick="loadTrack(0)">Country 'Tis Of Thee</button>
-    <button class="jukebox-tab-pill" onclick="loadTrack(1)">Double Helix</button>
-    <button class="jukebox-tab-pill" onclick="loadTrack(2)">Frogs And Frenz, ACTIVATE!</button>
-    <button class="jukebox-tab-pill" onclick="loadTrack(3)">Hollers And Hills And Highways</button>
-    <button class="jukebox-tab-pill" onclick="loadTrack(4)">Horus Cope</button>
-    <button class="jukebox-tab-pill" onclick="loadTrack(5)">Jubilees</button>
-    <button class="jukebox-tab-pill" onclick="loadTrack(6)">MAGAAnonymous</button>
-    <button class="jukebox-tab-pill" onclick="loadTrack(7)">New Ends And Old Beginnings</button>
-    <button class="jukebox-tab-pill" onclick="loadTrack(8)">One Nation</button>
-    <button class="jukebox-tab-pill" onclick="loadTrack(9)">Red Rock Prayer</button>
-    <button class="jukebox-tab-pill" onclick="loadTrack(10)">Shiners Moon</button>
-    <button class="jukebox-tab-pill" onclick="loadTrack(11)">States Of Mind</button>
-    <button class="jukebox-tab-pill" onclick="loadTrack(12)">Sweetleaf Of Mary</button>
-    <button class="jukebox-tab-pill" onclick="loadTrack(13)">Temporal Balance</button>
-    <button class="jukebox-tab-pill" onclick="loadTrack(14)">The AcQuitted - Desert Sands</button>
-    <button class="jukebox-tab-pill" onclick="loadTrack(15)">The AcQuitted - One Nation</button>
-    <button class="jukebox-tab-pill" onclick="loadTrack(16)">The AcQuitted - Virtuanon - Feel the...</button>
-    <button class="jukebox-tab-pill" onclick="loadTrack(17)">The Road Is My Home</button>
-    <button class="jukebox-tab-pill" onclick="loadTrack(18)">Three Seventy Nine</button>
-    <button class="jukebox-tab-pill" onclick="loadTrack(19)">Time Line Shift</button>
-    <button class="jukebox-tab-pill" onclick="loadTrack(20)">Under Cover</button>
-    <button class="jukebox-tab-pill" onclick="loadTrack(21)">Virtuanon - Ascension</button>
-    <button class="jukebox-tab-pill" onclick="loadTrack(22)">Virtuanon - Conspiracy Solution</button>
-    <button class="jukebox-tab-pill" onclick="loadTrack(23)">We go all!</button>
-  </div>
+  <div class="tabs-grid-wrapper" id="tabs-grid-wrapper"></div>
 
-  <!-- Central Jukebox Display Panel Window Case -->
   <div class="player-container">
-    <iframe id="soundcloud-player" allow="autoplay" src=""></iframe>
+    <iframe id="soundcloud-player" allow="autoplay"></iframe>
   </div>
 
-  <!-- CONSOLIDATED AUDIO & INTERACTION DECK CONTROL BAR -->
   <div class="unified-control-bar">
-    <button class="control-item-btn media-skip" onclick="prevTrack()" title="Previous Playlist">⏮</button>
-    <button id="play-pause-btn" class="control-item-btn media-skip" onclick="togglePlay()" title="Play / Pause">⏸</button>
-    <button class="control-item-btn media-skip" onclick="nextTrack()" title="Next Playlist">⏭</button>
+    <button class="control-item-btn media-skip" onclick="prevTrack()" title="Previous">⏮</button>
+    <button id="play-pause-btn" class="control-item-btn media-skip" onclick="togglePlay()" title="Play/Pause">▶</button>
+    <button class="control-item-btn media-skip" onclick="nextTrack()" title="Next">⏭</button>
     
     <button class="control-item-btn" onclick="triggerWidgetAction('shuffle')">🔀 Shuffle</button>
     <button class="control-item-btn" onclick="triggerWidgetAction('repeat')">🔁 Repeat</button>
@@ -177,50 +146,87 @@
     <button class="control-item-btn" onclick="triggerWidgetAction('share')">🔗 Share</button>
     <button class="control-item-btn" onclick="triggerWidgetAction('comment')">💬 Comment</button>
     
-    <!-- CashApp checkout portal button perfectly matching your other gold control items -->
-    <a href="https://cash.app" target="_blank" class="control-item-btn" title="Support via CashApp">💰 Tips Here</a>
+    <button class="control-item-btn" onclick="window.open('https://cash.app/$72turtle72','_blank')">💰 Tip if you wish</button>
   </div>
 
   <script>
-    // Database Reference Array Tracking your Playlists (24 Total entries covering your selection)
     const playlists = [
-      { name: "Country 'Tis Of Thee", url: "https://soundcloud.com" },
-      { name: "Double Helix", url: "https://soundcloud.com" },
-      { name: "Frogs And Frenz, ACTIVATE!", url: "https://soundcloud.com" },
-      { name: "Hollers And Hills And Highways", url: "https://soundcloud.com" },
-      { name: "Horus Cope", url: "https://soundcloud.com" },
-      { name: "Jubilees", url: "https://soundcloud.com" },
-      { name: "MAGAAnonymous", url: "https://soundcloud.com" },
-      { name: "New Ends And Old Beginnings", url: "https://soundcloud.com" },
-      { name: "One Nation", url: "https://soundcloud.com" },
-      { name: "Red Rock Prayer", url: "https://soundcloud.com" },
-      { name: "Shiners Moon", url: "https://soundcloud.com" },
-      { name: "States Of Mind", url: "https://soundcloud.com" },
-      { name: "Sweetleaf Of Mary", url: "https://soundcloud.com" },
-      { name: "Temporal Balance", url: "https://soundcloud.com" },
-      { name: "The AcQuitted - Desert Sands", url: "https://soundcloud.com" },
-      { name: "The AcQuitted - One Nation", url: "https://soundcloud.com" },
-      { name: "The AcQuitted - Virtuanon - Feel the...", url: "https://soundcloud.com" },
-      { name: "The Road Is My Home", url: "https://soundcloud.com" },
-      { name: "Three Seventy Nine", url: "https://soundcloud.com" },
-      { name: "Time Line Shift", url: "https://soundcloud.com" },
-      { name: "Under Cover", url: "https://soundcloud.com" },
-      { name: "Virtuanon - Ascension", url: "https://soundcloud.com" },
-      { name: "Virtuanon - Conspiracy Solution", url: "https://soundcloud.com" },
-      { name: "We go all!", url: "https://soundcloud.com" }
+      { name: "States Of Mind", url: "https://soundcloud.com/theacquitted/sets/states-of-mind" },
+      { name: "Sweetleaf Of Mary", url: "https://soundcloud.com/theacquitted/sets/sweetleaf-of-mary" },
+      { name: "Under Cover", url: "https://soundcloud.com/theacquitted/sets/under-cover" },
+      { name: "Three Seventy Nine", url: "https://soundcloud.com/theacquitted/sets/three-seventy-nine" },
+      { name: "Shiners Moon", url: "https://soundcloud.com/theacquitted/sets/shiners-moon" },
+      { name: "Hollers And Highways", url: "https://soundcloud.com/theacquitted/sets/hollers-and-highways" },
+      { name: "Country 'Tis Of Thee", url: "https://soundcloud.com/theacquitted/sets/country-tis-of-thee" },
+      { name: "We go all!", url: "https://soundcloud.com/theacquitted/sets/we-go-all" },
+      { name: "The Road Is My Home", url: "https://soundcloud.com/theacquitted/sets/the-road-is-my-home" },
+      { name: "One Nation", url: "https://soundcloud.com/theacquitted/sets/the-acquitted-one-nation" },
+      { name: "Temporal Balance", url: "https://soundcloud.com/theacquitted/sets/temporal-balance" },
+      { name: "Time Line Shift", url: "https://soundcloud.com/theacquitted/sets/time-line-shift" },
+      { name: "Jubilees", url: "https://soundcloud.com/theacquitted/sets/jubilees" },
+      { name: "Horus Cope", url: "https://soundcloud.com/theacquitted/sets/horus-cope" },
+      { name: "New Ends And Old Beginnings", url: "https://soundcloud.com/theacquitted/sets/new-ends-and-old-beginnings" },
+      { name: "Desert Sands", url: "https://soundcloud.com/theacquitted/sets/the-acquitted-desert-sands" },
+      { name: "Virtuanon - Conspiracy Solution", url: "https://soundcloud.com/theacquitted/sets/virtuanon-conspiracy" },
+      { name: "Virtuanon - Ascension", url: "https://soundcloud.com/theacquitted/sets/the-acquitted-virtuanon" },
+      { name: "Frogs And Frenz", url: "https://soundcloud.com/theacquitted/sets/frogs-and-frenz" },
+      { name: "MAGANonymous", url: "https://soundcloud.com/theacquitted/sets/maganonymous" },
     ];
 
     let currentIndex = 0;
-    let scWidget = null;
-    let isPlaying = true;
+    let widget = null;
 
-    async function loadTrack(index) {
+    function loadTrack(index) {
       if (index < 0 || index >= playlists.length) return;
       currentIndex = index;
-      
       const iframe = document.getElementById("soundcloud-player");
-      if (!iframe) return;
-
       const track = playlists[currentIndex];
-      let targetUrl = track.url;
+      iframe.src = `https://w.soundcloud.com/player/?url=${encodeURIComponent(track.url)}&color=%23ffaa00&auto_play=false&visual=true&show_comments=true&show_artwork=true`;
+      updateActiveTabUI();
+    }
 
+    function updateActiveTabUI() {
+      const buttons = document.querySelectorAll(".jukebox-tab-pill");
+      buttons.forEach((btn, index) => {
+        if (index === currentIndex) {
+          btn.classList.add("active-yellow-highlight");
+          btn.scrollIntoView({ behavior: 'smooth', inline: 'center' });
+        } else {
+          btn.classList.remove("active-yellow-highlight");
+        }
+      });
+    }
+
+    function nextTrack() {
+      let nextIdx = (currentIndex + 1) % playlists.length;
+      loadTrack(nextIdx);
+    }
+
+    function prevTrack() {
+      let prevIdx = (currentIndex - 1 + playlists.length) % playlists.length;
+      loadTrack(prevIdx);
+    }
+
+    function togglePlay() {
+      if (widget) widget.toggle();
+    }
+
+    function triggerWidgetAction(action) {
+      alert(`Action ${action} triggered on current playlist. Use the player controls for full functionality.`);
+    }
+
+    // Build the tabs
+    window.addEventListener("DOMContentLoaded", () => {
+      const wrapper = document.getElementById("tabs-grid-wrapper");
+      playlists.forEach((playlist, index) => {
+        const btn = document.createElement("button");
+        btn.className = "jukebox-tab-pill";
+        btn.textContent = playlist.name;
+        btn.onclick = () => loadTrack(index);
+        wrapper.appendChild(btn);
+      });
+      loadTrack(0);
+    });
+  </script>
+</body>
+</html>
