@@ -23,10 +23,6 @@
         .action-row { display:flex; justify-content:center; gap:12px; flex-wrap:wrap; margin:15px 0; }
         .action-btn { padding:12px 24px; border:3px solid #ffcc00; background:transparent; color:#ffcc00; border-radius:50px; cursor:pointer; font-weight:bold; box-shadow: 0 0 10px rgba(255, 204, 0, 0.3); }
         .action-btn:hover { box-shadow: 0 0 20px rgba(255, 204, 0, 0.6); }
-        .song-list { max-width:620px; margin:20px auto; background:#1a1a1a; border:2px solid #ffcc00; border-radius:12px; padding:15px; text-align:left; display:none; }
-        body.light .song-list { background:#fff; border-color:#ffcc00; }
-        .song-item { padding:8px 0; border-bottom:1px solid #333; cursor:pointer; }
-        .song-item:hover { background:#222; color:#ffcc00; }
     </style>
 </head>
 <body>
@@ -49,15 +45,9 @@
         <button class="action-btn" onclick="toggleRepeat()">🔁 REPEAT</button>
         <button class="action-btn">❤️ Like</button>
         <button class="action-btn" onclick="shareCurrent()">🔗 Share</button>
-        <button class="action-btn" onclick="showAllSongs()">📜 All Songs</button>
+        <button class="action-btn" onclick="alert('Comment box coming soon!')">💬 Comment</button>
         <button class="action-btn" onclick="window.open('https://cash.app/$72turtle72','_blank')">Tip if you wish</button>
         <button class="action-btn" onclick="toggleDarkMode()">🌙 / ☀️</button>
-    </div>
-
-    <div id="song-list" class="song-list">
-        <h3 style="margin-top:0; color:#ffcc00;">All Songs (Alphabetical Toggle)</h3>
-        <button onclick="toggleAlphabetical()">A-Z / Original</button>
-        <div id="song-list-content"></div>
     </div>
 
     <script>
@@ -82,16 +72,20 @@
             { name: "Virtuanon - Ascension", url: "https://soundcloud.com/theacquitted/sets/the-acquitted-virtuanon" },
             { name: "Frogs And Frenz", url: "https://soundcloud.com/theacquitted/sets/frogs-and-frenz" },
             { name: "MAGANonymous", url: "https://soundcloud.com/theacquitted/sets/maganonymous" },
+            { name: "All AcQuitted", url: "https://soundcloud.com/theacquitted/sets/All-AcQuitted" }
         ];
 
         let currentIndex = 0;
         let widget = null;
-        let isAlphabetical = false;
 
         function loadAlbum(index) {
             currentIndex = index;
             const album = playlists[index];
             const iframe = document.getElementById('soundcloud-player');
+            if (album.url === "#") {
+                alert("All AcQuitted playlist coming soon with 231 tracks!");
+                return;
+            }
             iframe.src = `https://w.soundcloud.com/player/?url=${encodeURIComponent(album.url)}&color=%23ffcc00&auto_play=false&visual=true&show_comments=true`;
             setTimeout(() => widget = SC.Widget(iframe), 400);
             updateNav();
@@ -119,32 +113,6 @@
 
         function toggleDarkMode() {
             document.body.classList.toggle('light');
-        }
-
-        function showAllSongs() {
-            const listDiv = document.getElementById('song-list');
-            const content = document.getElementById('song-list-content');
-            listDiv.style.display = 'block';
-            content.innerHTML = '';
-
-            let allSongs = [];
-            playlists.forEach(p => {
-                allSongs.push({ playlist: p.name, name: p.name });
-            });
-
-            if (isAlphabetical) allSongs.sort((a, b) => a.name.localeCompare(b.name));
-
-            allSongs.forEach(song => {
-                const div = document.createElement('div');
-                div.className = 'song-item';
-                div.textContent = song.name;
-                content.appendChild(div);
-            });
-        }
-
-        function toggleAlphabetical() {
-            isAlphabetical = !isAlphabetical;
-            showAllSongs();
         }
 
         window.onload = () => {
