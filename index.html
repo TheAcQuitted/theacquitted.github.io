@@ -1,230 +1,108 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>The AcQuitted Jukebox</title>
-  <script src="https://w.soundcloud.com/player/api.js" defer></script>
-  <style>
-    body {
-      background-color: #0b0b0c;
-      color: #ffffff;
-      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-      margin: 0;
-      padding: 20px;
-      display: flex;
-      flex-direction: column;
-      align-items: center;
-    }
-
-    h1 {
-      color: #ffaa00;
-      text-transform: uppercase;
-      letter-spacing: 2px;
-      font-size: 2rem;
-      margin-bottom: 25px;
-      text-shadow: 0 0 10px rgba(255, 170, 0, 0.4);
-    }
-
-    .tabs-grid-wrapper {
-      display: flex;
-      flex-direction: row;
-      flex-wrap: nowrap;
-      justify-content: flex-start;
-      gap: 12px;
-      max-width: 950px;
-      width: 100%;
-      padding: 12px;
-      margin-bottom: 25px;
-      overflow-x: auto;
-      scrollbar-width: thin;
-      scrollbar-color: #ffaa00 #161618;
-      -webkit-overflow-scrolling: touch;
-    }
-
-    .jukebox-tab-pill {
-      background: transparent;
-      color: #ffaa00;
-      border: 2px solid #ffaa00;
-      padding: 8px 18px;
-      border-radius: 20px;
-      cursor: pointer;
-      white-space: nowrap;
-      font-weight: bold;
-      font-size: 0.9rem;
-      transition: all 0.2s ease-in-out;
-      flex-shrink: 0;
-    }
-
-    .jukebox-tab-pill:hover {
-      background: rgba(255, 170, 0, 0.15);
-    }
-
-    .jukebox-tab-pill.active-yellow-highlight {
-      background: #ffaa00;
-      color: #0b0b0c;
-      box-shadow: 0 0 12px rgba(255, 170, 0, 0.6);
-    }
-
-    .player-container {
-      background: #121214;
-      border: 3px solid #ffaa00;
-      border-radius: 12px;
-      padding: 15px;
-      max-width: 800px;
-      width: 100%;
-      box-shadow: 0 10px 30px rgba(0,0,0,0.7);
-      margin-bottom: 25px;
-    }
-
-    iframe {
-      border: none;
-      border-radius: 6px;
-      background-color: #1a1a1c;
-      height: 450px;
-      width: 100%;
-    }
-
-    .unified-control-bar {
-      display: flex;
-      flex-wrap: wrap;
-      justify-content: center;
-      align-items: center;
-      gap: 12px;
-      max-width: 850px;
-      width: 100%;
-    }
-
-    .control-item-btn {
-      background: transparent;
-      color: #ffaa00;
-      border: 2px solid #ffaa00;
-      padding: 10px 22px;
-      border-radius: 12px;
-      cursor: pointer;
-      font-weight: bold;
-      transition: all 0.2s ease-in-out;
-      text-decoration: none;
-      display: inline-flex;
-      align-items: center;
-      justify-content: center;
-      font-size: 0.9rem;
-      min-height: 46px;
-      box-sizing: border-box;
-    }
-
-    .control-item-btn:hover {
-      background: #ffaa00;
-      color: #0b0b0c;
-      box-shadow: 0 0 10px rgba(255, 170, 0, 0.4);
-    }
-
-    .control-item-btn.media-skip {
-      font-size: 1.3rem;
-      padding: 5px 24px;
-    }
-  </style>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>The Acquitted Jukebox</title>
+    <script src="https://w.soundcloud.com/player/api.js" defer></script>
+    <style>
+        body { margin:0; padding:10px; font-family:system-ui; background:#111; color:#fff; text-align:center; }
+        h1 { color:#ff4500; text-shadow:0 0 15px #ffcc00; margin:10px 0 5px; font-size:1.8em; }
+        .album-nav { display:flex; overflow-x:auto; gap:10px; padding:10px 0; scrollbar-width:none; }
+        .album-nav::-webkit-scrollbar { display:none; }
+        .nav-btn { padding:10px 20px; border:2px solid #ffcc00; background:transparent; color:#ffcc00; border-radius:30px; white-space:nowrap; flex-shrink:0; cursor:pointer; }
+        .nav-btn.active { background:#ffcc00; color:#000; }
+        .player-container { max-width:620px; margin:15px auto; background:#1a1a1a; border:3px solid #ffcc00; border-radius:12px; padding:15px; }
+        iframe { width:100%; height:520px; border:none; border-radius:8px; }
+        .controls { display:flex; justify-content:center; gap:20px; margin:20px 0; }
+        .btn { width:70px; height:70px; border:3px solid #ffcc00; background:transparent; color:#ffcc00; border-radius:12px; font-size:28px; cursor:pointer; }
+        .action-row { display:flex; justify-content:center; gap:12px; flex-wrap:wrap; margin:15px 0; }
+        .action-btn { padding:12px 24px; border:3px solid #ffcc00; background:transparent; color:#ffcc00; border-radius:50px; cursor:pointer; font-weight:bold; }
+    </style>
 </head>
 <body>
+    <h1>THE ACQUITTED JUKEBOX</h1>
 
-  <h1>The AcQuitted Jukebox</h1>
+    <div class="album-nav" id="album-nav"></div>
 
-  <div class="tabs-grid-wrapper" id="tabs-grid-wrapper"></div>
+    <div class="player-container">
+        <iframe id="soundcloud-player" allow="autoplay"></iframe>
+    </div>
 
-  <div class="player-container">
-    <iframe id="soundcloud-player" allow="autoplay"></iframe>
-  </div>
+    <div class="controls">
+        <div class="btn" onclick="prev()">⏮️</div>
+        <div class="btn" onclick="togglePlay()">▶️</div>
+        <div class="btn" onclick="next()">⏭️</div>
+    </div>
 
-  <div class="unified-control-bar">
-    <button class="control-item-btn media-skip" onclick="prevTrack()" title="Previous">⏮</button>
-    <button id="play-pause-btn" class="control-item-btn media-skip" onclick="togglePlay()" title="Play/Pause">▶</button>
-    <button class="control-item-btn media-skip" onclick="nextTrack()" title="Next">⏭</button>
-    
-    <button class="control-item-btn" onclick="triggerWidgetAction('shuffle')">🔀 Shuffle</button>
-    <button class="control-item-btn" onclick="triggerWidgetAction('repeat')">🔁 Repeat</button>
-    <button class="control-item-btn" onclick="triggerWidgetAction('like')">❤️ Like</button>
-    <button class="control-item-btn" onclick="triggerWidgetAction('share')">🔗 Share</button>
-    <button class="control-item-btn" onclick="triggerWidgetAction('comment')">💬 Comment</button>
-    
-    <button class="control-item-btn" onclick="window.open('https://cash.app/$72turtle72','_blank')">💰 Tip if you wish</button>
-  </div>
+    <div class="action-row">
+        <button class="action-btn" onclick="toggleShuffle()">🔀 SHUFFLE</button>
+        <button class="action-btn" onclick="toggleRepeat()">🔁 REPEAT</button>
+        <button class="action-btn">❤️ Like</button>
+        <button class="action-btn" onclick="shareCurrent()">🔗 Share</button>
+        <button class="action-btn">💬 Comment</button>
+        <button class="action-btn" onclick="window.open('https://cash.app/$72turtle72','_blank')">Tip if you wish</button>
+    </div>
 
-  <script>
-    const playlists = [
-      { name: "States Of Mind", url: "https://soundcloud.com/theacquitted/sets/states-of-mind" },
-      { name: "Sweetleaf Of Mary", url: "https://soundcloud.com/theacquitted/sets/sweetleaf-of-mary" },
-      { name: "Under Cover", url: "https://soundcloud.com/theacquitted/sets/under-cover" },
-      { name: "Three Seventy Nine", url: "https://soundcloud.com/theacquitted/sets/three-seventy-nine" },
-      { name: "Shiners Moon", url: "https://soundcloud.com/theacquitted/sets/shiners-moon" },
-      { name: "Hollers And Highways", url: "https://soundcloud.com/theacquitted/sets/hollers-and-highways" },
-      { name: "Country 'Tis Of Thee", url: "https://soundcloud.com/theacquitted/sets/country-tis-of-thee" },
-      { name: "We go all!", url: "https://soundcloud.com/theacquitted/sets/we-go-all" },
-      { name: "The Road Is My Home", url: "https://soundcloud.com/theacquitted/sets/the-road-is-my-home" },
-      { name: "One Nation", url: "https://soundcloud.com/theacquitted/sets/the-acquitted-one-nation" },
-      { name: "Temporal Balance", url: "https://soundcloud.com/theacquitted/sets/temporal-balance" },
-      { name: "Time Line Shift", url: "https://soundcloud.com/theacquitted/sets/time-line-shift" },
-      { name: "Jubilees", url: "https://soundcloud.com/theacquitted/sets/jubilees" },
-      { name: "Horus Cope", url: "https://soundcloud.com/theacquitted/sets/horus-cope" },
-      { name: "New Ends And Old Beginnings", url: "https://soundcloud.com/theacquitted/sets/new-ends-and-old-beginnings" },
-      { name: "Desert Sands", url: "https://soundcloud.com/theacquitted/sets/the-acquitted-desert-sands" },
-      { name: "Virtuanon - Conspiracy Solution", url: "https://soundcloud.com/theacquitted/sets/virtuanon-conspiracy" },
-      { name: "Virtuanon - Ascension", url: "https://soundcloud.com/theacquitted/sets/the-acquitted-virtuanon" },
-      { name: "Frogs And Frenz", url: "https://soundcloud.com/theacquitted/sets/frogs-and-frenz" },
-      { name: "MAGANonymous", url: "https://soundcloud.com/theacquitted/sets/maganonymous" },
-    ];
+    <script>
+        const playlists = [
+            { name: "States Of Mind", url: "https://on.soundcloud.com/BXZXz6yOapuqxB7cg7" },
+            { name: "Sweetleaf Of Mary", url: "https://soundcloud.com/theacquitted/sets/sweetleaf-of-mary" },
+            { name: "Under Cover", url: "https://soundcloud.com/theacquitted/sets/under-cover" },
+            { name: "Three Seventy Nine", url: "https://soundcloud.com/theacquitted/sets/three-seventy-nine" },
+            { name: "Shiners Moon", url: "https://soundcloud.com/theacquitted/sets/shiners-moon" },
+            { name: "Hollers And Highways", url: "https://on.soundcloud.com/8OKUIp3seJND3YqOwk" },
+            { name: "Country 'Tis Of Thee", url: "https://soundcloud.com/theacquitted/sets/country-tis-of-thee" },
+            { name: "We go all!", url: "https://on.soundcloud.com/0UmcD031qvw37KGJrS" },
+            { name: "The Road Is My Home", url: "https://soundcloud.com/theacquitted/sets/the-road-is-my-home" },
+            { name: "One Nation", url: "https://soundcloud.com/theacquitted/sets/the-acquitted-one-nation" },
+            { name: "Temporal Balance", url: "https://soundcloud.com/theacquitted/sets/temporal-balance" },
+            { name: "Time Line Shift", url: "https://soundcloud.com/theacquitted/sets/time-line-shift" },
+            { name: "Jubilees", url: "https://soundcloud.com/theacquitted/sets/jubilees" },
+            { name: "Horus Cope", url: "https://soundcloud.com/theacquitted/sets/horus-cope" },
+            { name: "New Ends And Old Beginnings", url: "https://soundcloud.com/theacquitted/sets/new-ends-and-old-beginnings" },
+            { name: "Desert Sands", url: "https://soundcloud.com/theacquitted/sets/the-acquitted-desert-sands" },
+            { name: "Virtuanon - Conspiracy Solution", url: "https://soundcloud.com/theacquitted/sets/virtuanon-conspiracy" },
+            { name: "Virtuanon - Ascension", url: "https://soundcloud.com/theacquitted/sets/the-acquitted-virtuanon" },
+            { name: "Frogs And Frenz", url: "https://soundcloud.com/theacquitted/sets/frogs-and-frenz" },
+            { name: "MAGANonymous", url: "https://soundcloud.com/theacquitted/sets/maganonymous" },
+        ];
 
-    let currentIndex = 0;
-    let widget = null;
+        let currentIndex = 0;
+        let widget = null;
 
-    function loadTrack(index) {
-      currentIndex = index;
-      const track = playlists[currentIndex];
-      const iframe = document.getElementById("soundcloud-player");
-      iframe.src = `https://w.soundcloud.com/player/?url=${encodeURIComponent(track.url)}&color=%23ffaa00&auto_play=false&visual=true&show_comments=true&show_artwork=true`;
-      updateActiveTabUI();
-    }
-
-    function updateActiveTabUI() {
-      const buttons = document.querySelectorAll(".jukebox-tab-pill");
-      buttons.forEach((btn, index) => {
-        if (index === currentIndex) {
-          btn.classList.add("active-yellow-highlight");
-          btn.scrollIntoView({ behavior: 'smooth', inline: 'center' });
-        } else {
-          btn.classList.remove("active-yellow-highlight");
+        function loadAlbum(index) {
+            currentIndex = index;
+            const album = playlists[index];
+            const iframe = document.getElementById('soundcloud-player');
+            iframe.src = `https://w.soundcloud.com/player/?url=${encodeURIComponent(album.url)}&color=%23ffcc00&auto_play=false&visual=true&show_comments=true`;
+            setTimeout(() => widget = SC.Widget(iframe), 400);
+            updateNav();
         }
-      });
-    }
 
-    function nextTrack() {
-      let nextIdx = (currentIndex + 1) % playlists.length;
-      loadTrack(nextIdx);
-    }
+        function updateNav() {
+            const nav = document.getElementById('album-nav');
+            nav.innerHTML = '';
+            playlists.forEach((album, i) => {
+                const btn = document.createElement('button');
+                btn.className = 'nav-btn';
+                btn.textContent = album.name;
+                btn.onclick = () => loadAlbum(i);
+                if (i === currentIndex) btn.classList.add('active');
+                nav.appendChild(btn);
+            });
+        }
 
-    function prevTrack() {
-      let prevIdx = (currentIndex - 1 + playlists.length) % playlists.length;
-      loadTrack(prevIdx);
-    }
+        function togglePlay() { if (widget) widget.toggle(); }
+        function prev() { if (widget) widget.prev(); }
+        function next() { if (widget) widget.next(); }
+        function toggleShuffle() { alert('Shuffle ON 🔥'); }
+        function toggleRepeat() { alert('Repeat toggled'); }
+        function shareCurrent() { navigator.clipboard.writeText(window.location.href); alert('Link copied!'); }
 
-    function togglePlay() {
-      if (widget) widget.toggle();
-    }
-
-    function triggerWidgetAction(action) {
-      alert(`Action ${action} triggered. Use the player controls for full functionality.`);
-    }
-
-    window.addEventListener("DOMContentLoaded", () => {
-      const wrapper = document.getElementById("tabs-grid-wrapper");
-      playlists.forEach((playlist, index) => {
-        const btn = document.createElement("button");
-        btn.className = "jukebox-tab-pill";
-        btn.textContent = playlist.name;
-        btn.onclick = () => loadTrack(index);
-        wrapper.appendChild(btn);
-      });
-      loadTrack(0);
-    });
-  </script>
+        window.onload = () => {
+            if (playlists.length > 0) loadAlbum(0);
+        };
+    </script>
 </body>
 </html>
