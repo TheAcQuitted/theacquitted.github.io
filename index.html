@@ -5,10 +5,11 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>The AcQuitted Jukebox</title>
   
-  <!-- 1. Mandatory SoundCloud API Communication Bridge -->
+  <!-- Mandatory SoundCloud Embed Widget API Library -->
   <script src="https://soundcloud.com"></script>
 
   <style>
+    /* Jukebox Visual Theme Engine Styles */
     body {
       background-color: #0b0b0c;
       color: #ffffff;
@@ -29,15 +30,15 @@
       text-shadow: 0 0 10px rgba(255, 170, 0, 0.4);
     }
 
-    /* Horizontal scroll row layout for top tabs navigation */
+    /* Top Horizontal Navigation Tab Carousel */
     .tabs-scroll-row {
       display: flex;
       gap: 12px;
-      max-width: 900px;
+      max-width: 950px;
       width: 100%;
       overflow-x: auto;
       padding: 10px;
-      margin-bottom: 20px;
+      margin-bottom: 25px;
       scrollbar-width: thin;
       scrollbar-color: #ffaa00 #161618;
     }
@@ -66,13 +67,14 @@
       background: rgba(255, 170, 0, 0.15);
     }
 
-    /* Active State Glow Highlights Styles Rule Class */
+    /* Active Category Yellow Highlight Ring Hook */
     .jukebox-tab-pill.active-yellow-highlight {
       background: #ffaa00;
       color: #0b0b0c;
       box-shadow: 0 0 12px rgba(255, 170, 0, 0.6);
     }
 
+    /* Central Display Frame Container matching design mockup layout */
     .player-container {
       background: #121214;
       border: 3px solid #ffaa00;
@@ -81,21 +83,25 @@
       max-width: 800px;
       width: 100%;
       box-shadow: 0 10px 30px rgba(0,0,0,0.7);
+      box-sizing: border-box;
     }
 
     iframe {
       border: none;
       border-radius: 6px;
       background-color: #1a1a1c;
-      height: 180px; /* Optimal layout profile prevents black borders */
+      height: 450px; /* Perfect desktop/tablet canvas height to display full image artwork and tracks list */
+      width: 100%;
     }
 
+    /* Core Media Control Deck Layout (Row 1 Directly Below Display Box) */
     .media-bar-controls {
       display: flex;
       justify-content: center;
       align-items: center;
-      gap: 25px;
+      gap: 20px;
       margin-top: 20px;
+      margin-bottom: 25px;
     }
 
     .media-btn {
@@ -103,9 +109,9 @@
       border: 2px solid #ffaa00;
       color: #ffaa00;
       border-radius: 50%;
-      width: 50px;
-      height: 50px;
-      font-size: 1.2rem;
+      width: 55px;
+      height: 55px;
+      font-size: 1.4rem;
       cursor: pointer;
       display: flex;
       align-items: center;
@@ -118,28 +124,92 @@
       color: #0b0b0c;
       transform: scale(1.08);
     }
+
+    .media-btn.play-toggle {
+      width: 65px;
+      height: 65px;
+      font-size: 1.6rem;
+    }
+
+    /* Secondary Utility Platform Control Grid (Row 2 Below Box) */
+    .interaction-deck {
+      display: flex;
+      flex-wrap: wrap;
+      justify-content: center;
+      gap: 12px;
+      max-width: 800px;
+      width: 100%;
+    }
+
+    .deck-pill-btn {
+      background: transparent;
+      color: #ffaa00;
+      border: 2px solid #ffaa00;
+      padding: 10px 24px;
+      border-radius: 25px;
+      cursor: pointer;
+      font-weight: bold;
+      text-transform: uppercase;
+      font-size: 0.85rem;
+      transition: all 0.2s ease-in-out;
+      text-decoration: none;
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+    }
+
+    .deck-pill-btn:hover {
+      background: #ffaa00;
+      color: #0b0b0c;
+      box-shadow: 0 0 10px rgba(255, 170, 0, 0.4);
+    }
+
+    /* Branded CashApp Checkout Theme Action Button Styles */
+    .deck-pill-btn.tips-highlight {
+      border-color: #22c55e;
+      color: #22c55e;
+    }
+
+    .deck-pill-btn.tips-highlight:hover {
+      background: #22c55e;
+      color: #ffffff;
+      box-shadow: 0 0 10px rgba(34, 197, 94, 0.4);
+    }
   </style>
 </head>
 <body>
 
   <h1>The AcQuitted Jukebox</h1>
 
-  <!-- Top Navigation Tab Bar Element Wrapper -->
+  <!-- Top Scrollable Buttons Bar Container Link Target Grid -->
   <div id="jukebox-tabs-container" class="tabs-scroll-row"></div>
 
-  <!-- Player Box Container Wrapper -->
+  <!-- Main Showcase Jukebox Monitor Box View -->
   <div class="player-container">
-    <iframe id="soundcloud-player" width="100%" src=""></iframe>
+    <iframe id="soundcloud-player" allow="autoplay" src=""></iframe>
+  </div>
 
-    <div class="media-bar-controls">
-      <button class="media-btn" onclick="prevTrack()">⏮</button>
-      <button id="play-pause-btn" class="media-btn" onclick="togglePlay()">⏸</button>
-      <button class="media-btn" onclick="nextTrack()">⏭</button>
-    </div>
+  <!-- Primary Navigation Audio Controllers Row (Directly Below Player Box) -->
+  <div class="media-bar-controls">
+    <button class="media-btn" onclick="prevTrack()" title="Previous Playlist">⏮</button>
+    <button id="play-pause-btn" class="media-btn play-toggle" onclick="togglePlay()" title="Play / Pause">⏸</button>
+    <button class="media-btn" onclick="nextTrack()" title="Next Playlist">⏭</button>
+  </div>
+
+  <!-- Secondary Interactive Deck Row Layout (Row 2 Below Player Box) -->
+  <div class="interaction-deck">
+    <button class="deck-pill-btn" onclick="triggerWidgetAction('shuffle')">🔀 Shuffle</button>
+    <button class="deck-pill-btn" onclick="triggerWidgetAction('repeat')">🔁 Repeat</button>
+    <button class="deck-pill-btn" onclick="triggerWidgetAction('like')">❤️ Like</button>
+    <button class="deck-pill-btn" onclick="triggerWidgetAction('share')">🔗 Share</button>
+    <button class="deck-pill-btn" onclick="triggerWidgetAction('comment')">💬 Comment</button>
+    
+    <!-- CashApp Link Point Configured to your exact Profile handle $72turtle72 -->
+    <a href="https://cash.app" target="_blank" class="deck-pill-btn tips-highlight">💰 Tips Here</a>
   </div>
 
   <script>
-    // Alphabetically Sorted Master Playlists Data Tracks Matrix Array Index
+    // Master Alphabetically Sorted Matrix Array Index (24 Playlists)
     const playlists = [
       { name: "Country 'Tis Of Thee", url: "https://soundcloud.com" },
       { name: "Double Helix", url: "https://soundcloud.com" },
@@ -164,8 +234,6 @@
       { name: "Under Cover", url: "https://soundcloud.com" },
       { name: "Virtuanon - Ascension", url: "https://soundcloud.com" },
       { name: "Virtuanon - Conspiracy Solution", url: "https://soundcloud.com" },
-      
-      // FIXED: Directly processing your app share link through the translation layer engine
       { name: "We go all!", url: "https://soundcloud.com" }
     ];
 
@@ -173,6 +241,7 @@
     let scWidget = null;
     let isPlaying = true;
 
+    // Dynamically populates the top navigation buttons bar row item tags from the index array
     function createNavigationTabs() {
       const container = document.getElementById("jukebox-tabs-container");
       if (!container) return;
@@ -187,6 +256,7 @@
       });
     }
 
+    // Handles resolution checks and loads the playlist asset inside the player panel framework canvas
     async function loadTrack(index) {
       if (index < 0 || index >= playlists.length) return;
       currentIndex = index;
@@ -197,70 +267,9 @@
       const track = playlists[currentIndex];
       let targetUrl = track.url;
 
-      // AUTOMATED TRANSLATOR LAYER: Checks for app share link domains
+      // Smart Parsing Translation: Handles your app share links automatically on the fly
       if (targetUrl.includes("://soundcloud.com")) {
         try {
-          // Utilizes an open redirect parsing channel to unwrap mobile short addresses
           const response = await fetch(`https://corsproxy.io{encodeURIComponent(targetUrl)}`);
-          if (response.url) {
-            targetUrl = response.url;
-          }
-        } catch (e) {
-          // Robust Fallback: Reconstructs native address structures if network proxies drop
-          const simpleSlug = track.name.toLowerCase().replace(/[^a-z0-9\s-]/g, "").replace(/\s+/g, "-");
-          targetUrl = `https://soundcloud.com{simpleSlug}`;
-        }
-      }
-
-      const secureSlug = encodeURIComponent(targetUrl);
-      
-      // Formats rendering options to flat responsive parameters to scale across tablets
-      iframe.src = `https://soundcloud.com{secureSlug}&color=%23ffaa00&auto_play=true&hide_related=true&show_comments=false&show_user=true&show_reposts=false&show_teaser=false&visual=false`;
-
-      if (window.SC) {
-        scWidget = SC.Widget(iframe);
-        scWidget.bind(SC.Widget.Events.FINISH, () => {
-          nextTrack();
-        });
-      }
-      
-      updateActiveTabUI();
-    }
-
-    function nextTrack() {
-      let nextIdx = (currentIndex + 1) % playlists.length;
-      loadTrack(nextIdx);
-    }
-
-    function prevTrack() {
-      let prevIdx = (currentIndex - 1 + playlists.length) % playlists.length;
-      loadTrack(prevIdx);
-    }
-
-    function togglePlay() {
-      if (!scWidget) return;
-      scWidget.toggle();
-      isPlaying = !isPlaying;
-      document.getElementById("play-pause-btn").innerText = isPlaying ? "⏸" : "▶";
-    }
-
-    function updateActiveTabUI() {
-      const buttons = document.querySelectorAll(".jukebox-tab-pill");
-      if(!buttons.length) return;
-      buttons.forEach((btn, index) => {
-        if (index === currentIndex) {
-          btn.classList.add("active-yellow-highlight");
-          btn.scrollIntoView({ behavior: 'smooth', block: 'nearest', inline: 'center' });
-        } else {
-          btn.classList.remove("active-yellow-highlight");
-        }
-      });
-    }
-
-    window.addEventListener("DOMContentLoaded", () => {
-      createNavigationTabs();
-      loadTrack(0);
-    });
-  </script>
-</body>
-</html>
+          if (response.url) targetUrl = response.url;
+        } catch (e) {const simpleSlug = track.name.toLowerCase().replace(/[^a-z0-9\s-]/g, "").replace(/\s+/g, "-");targetUrl = https://soundcloud.com{simpleSlug};}}const secureSlug = encodeURIComponent(targetUrl);// ANTI-POPUP SECURITY LOCKDOWN SETTINGS: visual=true & show_teaser=false hides popups while exposing full artworkiframe.src = https://soundcloud.com{secureSlug}&color=%23ffaa00&auto_play=true&hide_related=true&show_comments=true&show_user=true&show_reposts=false&show_teaser=false&buying=false&sharing=false&download=false&visual=true&show_artwork=true;if (window.SC) {scWidget = SC.Widget(iframe);// Auto-advance mechanism to boot next playlist alphabetically when current selection loops outscWidget.bind(SC.Widget.Events.FINISH, () => {nextTrack();});// Keeps play button symbol synced regardless of where user clicks to play/pausescWidget.bind(SC.Widget.Events.PLAY, () => {isPlaying = true;document.getElementById("play-pause-btn").innerText = "⏸";});scWidget.bind(SC.Widget.Events.PAUSE, () => {isPlaying = false;document.getElementById("play-pause-btn").innerText = "▶";});}updateActiveTabUI();}function nextTrack() {let nextIdx = (currentIndex + 1) % playlists.length;loadTrack(nextIdx);}function prevTrack() {let prevIdx = (currentIndex - 1 + playlists.length) % playlists.length;loadTrack(prevIdx);}function togglePlay() {if (!scWidget) return;scWidget.toggle();}// Connects lower button row to actions within the loaded playlist iframe instancefunction triggerWidgetAction(actionType) {if (!scWidget) return;switch(actionType) {case 'shuffle':scWidget.getSounds((sounds) => {if(sounds && sounds.length) {const randomTrackIdx = Math.floor(Math.random() * sounds.length);scWidget.skip(randomTrackIdx);}});break;case 'repeat':scWidget.getCurrentSoundIndex((idx) => {scWidget.skip(idx);});break;case 'like':case 'share':case 'comment':// Prompts user to use secure built-in native buttons to avoid opening separate popup windowsalert(To ${actionType} this selection, please toggle the native integration icons embedded directly inside the player monitor window scene block.);break;}}// Automatically highlights the active menu item and slides it smoothly into view on small screensfunction updateActiveTabUI() {const buttons = document.querySelectorAll(".jukebox-tab-pill");if(!buttons.length) return;buttons.forEach((btn, index) => {if (index === currentIndex) {btn.classList.add("active-yellow-highlight");btn.scrollIntoView({ behavior: 'smooth', block: 'nearest', inline: 'center' });} else {btn.classList.remove("active-yellow-highlight");}});}// Initialize lifecycle hooks on content frame layout bootwindow.addEventListener("DOMContentLoaded", () => {createNavigationTabs();loadTrack(0);});
