@@ -5,126 +5,38 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>THE ACQUITTED JUKEBOX</title>
 <style>
-  body {
-    background: #000;
-    color: #ffd700;
-    font-family: Arial, sans-serif;
-    margin: 0;
-    padding: 15px;
-    text-align: center;
-  }
-  h1 {
-    font-size: 28px;
-    color: #ff5500;
-    text-shadow: 0 0 15px #ff0000;
-    margin: 10px 0 20px;
-  }
-  .playlist-selector {
-    display: flex;
-    overflow-x: auto;
-    gap: 12px;
-    padding: 10px 5px;
-    margin-bottom: 20px;
-    white-space: nowrap;
-  }
-  .playlist-btn {
-    background: #ffd700;
-    color: #111;
-    border: none;
-    padding: 10px 22px;
-    font-size: 15px;
-    border-radius: 50px;
-    cursor: pointer;
-    font-weight: bold;
-    flex-shrink: 0;
-  }
-  .playlist-btn:active {
-    transform: scale(0.95);
-  }
-  #player-container {
-    max-width: 620px;
-    margin: 0 auto 20px;
-    border: 6px solid #ffd700;
-    border-radius: 12px;
-    overflow: hidden;
-    background: #000;
-  }
-  .controls {
-    display: flex;
-    justify-content: center;
-    gap: 20px;
-    padding: 12px;
-    background: #111;
-    border-radius: 12px;
-    max-width: 620px;
-    margin: 0 auto 15px;
-  }
-  .controls button {
-    background: #222;
-    color: #ffd700;
-    border: 4px solid #ffd700;
-    border-radius: 12px;
-    padding: 12px 24px;
-    font-size: 26px;
-    cursor: pointer;
-  }
-  .controls button:active {
-    background: #ffd700;
-    color: #111;
-  }
-  .action-row {
-    display: flex;
-    flex-wrap: wrap;
-    justify-content: center;
-    gap: 10px;
-    padding: 12px;
-    background: #111;
-    border-radius: 16px;
-    max-width: 620px;
-    margin: 0 auto;
-  }
-  .action-btn {
-    background: #222;
-    color: #ffd700;
-    border: 3px solid #ffd700;
-    padding: 10px 16px;
-    font-size: 14px;
-    border-radius: 50px;
-    cursor: pointer;
-    min-width: 105px;
-  }
-  .action-btn:active {
-    background: #ffd700;
-    color: #111;
-  }
+  body { background: #000; color: #ffd700; font-family: Arial, sans-serif; margin: 0; padding: 15px; text-align: center; }
+  h1 { font-size: 28px; color: #ff5500; text-shadow: 0 0 15px #ff0000; margin: 10px 0 20px; }
+  .playlist-selector { display: flex; overflow-x: auto; gap: 12px; padding: 10px 5px; margin-bottom: 20px; white-space: nowrap; }
+  .playlist-btn { background: #ffd700; color: #111; border: none; padding: 10px 22px; font-size: 15px; border-radius: 50px; cursor: pointer; font-weight: bold; flex-shrink: 0; }
+  .playlist-btn:active { transform: scale(0.95); }
+  #player-container { max-width: 620px; margin: 0 auto 20px; border: 6px solid #ffd700; border-radius: 12px; overflow: hidden; background: #000; }
+  .controls { display: flex; justify-content: center; gap: 20px; padding: 12px; background: #111; border-radius: 12px; max-width: 620px; margin: 0 auto 15px; }
+  .controls button { background: #222; color: #ffd700; border: 4px solid #ffd700; border-radius: 12px; padding: 12px 24px; font-size: 26px; cursor: pointer; }
+  .controls button:active { background: #ffd700; color: #111; }
+  .action-row { display: flex; flex-wrap: wrap; justify-content: center; gap: 10px; padding: 12px; background: #111; border-radius: 16px; max-width: 620px; margin: 0 auto; }
+  .action-btn { background: #222; color: #ffd700; border: 3px solid #ffd700; padding: 10px 16px; font-size: 14px; border-radius: 50px; cursor: pointer; min-width: 105px; }
+  .action-btn:active { background: #ffd700; color: #111; }
 </style>
 </head>
 <body>
 
 <h1>THE ACQUITTED JUKEBOX</h1>
 
-<!-- Horizontal scrolling buttons with real playlist titles -->
 <div class="playlist-selector"></div>
 
-<!-- Player with yellow border -->
 <div id="player-container">
-  <iframe id="sc-widget" 
-          width="100%" 
-          height="680" 
-          scrolling="no" 
-          frameborder="no"
+  <iframe id="sc-widget" width="100%" height="680" scrolling="no" frameborder="no"
           src="https://w.soundcloud.com/player/?url=https%3A//soundcloud.com/theacquitted/sets/red-rock-prayer&color=%23ff5500">
   </iframe>
 </div>
 
-<!-- Transport controls -->
 <div class="controls">
   <button onclick="prevTrack()">⏮️</button>
   <button id="playBtn" onclick="togglePlay()">▶️</button>
   <button onclick="nextTrack()">⏭️</button>
 </div>
 
-<!-- Action buttons -->
 <div class="action-row">
   <button class="action-btn" onclick="shufflePlaylist()">🔀 SHUFFLE</button>
   <button id="repeatBtn" class="action-btn" onclick="toggleRepeat()">🔁 REPEAT</button>
@@ -137,27 +49,27 @@
 <script src="https://w.soundcloud.com/player/api.js"></script>
 <script>
 const playlists = [
-  { name: "States of Mind", url: "https://soundcloud.com/theacquitted/sets/red-rock-prayer" },
-  { name: "Double Helix", url: "https://soundcloud.com/theacquitted/sets/double-helix" },
-  { name: "Neon Reverie", url: "https://soundcloud.com/theacquitted/sets/neon-reverie" },
-  { name: "Velvet Thunder", url: "https://soundcloud.com/theacquitted/sets/velvet-thunder" },
-  { name: "Electric Soul", url: "https://soundcloud.com/theacquitted/sets/electric-soul" },
-  { name: "Shadow Realm", url: "https://soundcloud.com/theacquitted/sets/shadow-realm" },
-  { name: "Crimson Drive", url: "https://soundcloud.com/theacquitted/sets/crimson-drive" },
-  { name: "Midnight Echo", url: "https://soundcloud.com/theacquitted/sets/midnight-echo" },
-  { name: "Golden Horizon", url: "https://soundcloud.com/theacquitted/sets/golden-horizon" },
-  { name: "Broken Crown", url: "https://soundcloud.com/theacquitted/sets/broken-crown" },
-  { name: "Wildfire Heart", url: "https://soundcloud.com/theacquitted/sets/wildfire-heart" },
-  { name: "Silver Lining", url: "https://soundcloud.com/theacquitted/sets/silver-lining" },
-  { name: "Phantom Ride", url: "https://soundcloud.com/theacquitted/sets/phantom-ride" },
-  { name: "Desert Storm", url: "https://soundcloud.com/theacquitted/sets/desert-storm" },
-  { name: "Ocean of Stars", url: "https://soundcloud.com/theacquitted/sets/ocean-of-stars" },
-  { name: "Iron Legacy", url: "https://soundcloud.com/theacquitted/sets/iron-legacy" },
-  { name: "Fading Lights", url: "https://soundcloud.com/theacquitted/sets/fading-lights" },
-  { name: "Rebel Spirit", url: "https://soundcloud.com/theacquitted/sets/rebel-spirit" },
-  { name: "Eternal Flame", url: "https://soundcloud.com/theacquitted/sets/eternal-flame" },
-  { name: "Lost Highway", url: "https://soundcloud.com/theacquitted/sets/lost-highway" },
-  { name: "Final Chapter", url: "https://soundcloud.com/theacquitted/sets/final-chapter" }
+  { name: "States Of Mind", url: "https://soundcloud.com/theacquitted/sets/red-rock-prayer" },
+  { name: "Sweetleaf Of Mary", url: "https://soundcloud.com/theacquitted/sets/red-rock-prayer" },
+  { name: "Under Cover", url: "https://soundcloud.com/theacquitted/sets/red-rock-prayer" },
+  { name: "Three Seventy Nine", url: "https://soundcloud.com/theacquitted/sets/red-rock-prayer" },
+  { name: "Shiners Moon", url: "https://soundcloud.com/theacquitted/sets/red-rock-prayer" },
+  { name: "Hollers And Hills And Highways", url: "https://soundcloud.com/theacquitted/sets/red-rock-prayer" },
+  { name: "Country 'Tis Of Thee", url: "https://soundcloud.com/theacquitted/sets/red-rock-prayer" },
+  { name: "We go all!", url: "https://soundcloud.com/theacquitted/sets/red-rock-prayer" },
+  { name: "The Road Is My Home", url: "https://soundcloud.com/theacquitted/sets/red-rock-prayer" },
+  { name: "The AcQuitted - One Nation", url: "https://soundcloud.com/theacquitted/sets/red-rock-prayer" },
+  { name: "Temporal Balance", url: "https://soundcloud.com/theacquitted/sets/red-rock-prayer" },
+  { name: "Time Line Shift", url: "https://soundcloud.com/theacquitted/sets/red-rock-prayer" },
+  { name: "Jubilees", url: "https://soundcloud.com/theacquitted/sets/red-rock-prayer" },
+  { name: "Horus Cope", url: "https://soundcloud.com/theacquitted/sets/red-rock-prayer" },
+  { name: "New Ends And Old Beginnings", url: "https://soundcloud.com/theacquitted/sets/red-rock-prayer" },
+  { name: "The AcQuitted - Desert Sands", url: "https://soundcloud.com/theacquitted/sets/red-rock-prayer" },
+  { name: "Virtuanon - Conspiracy Solution", url: "https://soundcloud.com/theacquitted/sets/red-rock-prayer" },
+  { name: "Virtuanon - Ascension", url: "https://soundcloud.com/theacquitted/sets/red-rock-prayer" },
+  { name: "The AcQuitted - Virtuanon - Feel the...", url: "https://soundcloud.com/theacquitted/sets/red-rock-prayer" },
+  { name: "Frogs And Frenz, ACTIVATE!", url: "https://soundcloud.com/theacquitted/sets/red-rock-prayer" },
+  { name: "MAGAAnonymous", url: "https://soundcloud.com/theacquitted/sets/red-rock-prayer" }
 ];
 
 let widget;
@@ -180,28 +92,20 @@ function createPlaylistButtons() {
 function initWidget() {
   const iframe = document.getElementById('sc-widget');
   widget = SC.Widget(iframe);
-
   widget.bind(SC.Widget.Events.READY, () => {});
   widget.bind(SC.Widget.Events.TRACK_CHANGE, updateTrackInfo);
-  widget.bind(SC.Widget.Events.FINISH, () => {
-    if (repeatMode && widget) widget.skip(0);
-  });
+  widget.bind(SC.Widget.Events.FINISH, () => { if (repeatMode && widget) widget.skip(0); });
 }
 
 function loadPlaylist(index) {
   if (!widget || !playlists[index]) return;
   currentIndex = index;
-  widget.load(playlists[index].url, {
-    auto_play: false,
-    color: "#ff5500"
-  });
+  widget.load(playlists[index].url, { auto_play: false, color: "#ff5500" });
 }
 
 function updateTrackInfo() {
   if (!widget) return;
-  widget.getCurrentSound((sound) => {
-    if (sound && sound.permalink_url) currentPermalink = sound.permalink_url;
-  });
+  widget.getCurrentSound((sound) => { if (sound && sound.permalink_url) currentPermalink = sound.permalink_url; });
 }
 
 function togglePlay() {
@@ -214,9 +118,7 @@ function togglePlay() {
 function prevTrack() { if (widget) widget.prev(); }
 function nextTrack() { if (widget) widget.next(); }
 
-function shufflePlaylist() {
-  if (widget) widget.skip(Math.floor(Math.random() * 12));
-}
+function shufflePlaylist() { if (widget) widget.skip(Math.floor(Math.random() * 12)); }
 
 function toggleRepeat() {
   repeatMode = !repeatMode;
@@ -247,7 +149,7 @@ function donate() {
 window.onload = function() {
   createPlaylistButtons();
   initWidget();
-  setTimeout(() => loadPlaylist(0), 800); // Start with States of Mind
+  setTimeout(() => loadPlaylist(0), 800);
 };
 </script>
 
