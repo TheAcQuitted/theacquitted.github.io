@@ -40,7 +40,7 @@
         <button class="action-btn" onclick="toggleRepeat()">🔁 REPEAT</button>
         <button class="action-btn">❤️ Like</button>
         <button class="action-btn" onclick="shareCurrent()">🔗 Share</button>
-        <button class="action-btn">💬 Comment</button>
+        <button class="action-btn" onclick="alert('Comment box coming soon!')">💬 Comment</button>
         <button class="action-btn" onclick="window.open('https://cash.app/$72turtle72','_blank')">Tip if you wish</button>
     </div>
 
@@ -51,6 +51,7 @@
             { name: "Under Cover", url: "https://soundcloud.com/theacquitted/sets/under-cover" },
             { name: "Three Seventy Nine", url: "https://soundcloud.com/theacquitted/sets/three-seventy-nine" },
             { name: "Shiners Moon", url: "https://soundcloud.com/theacquitted/sets/shiners-moon" },
+            { name: "Hollars And Hills And Highways", url: "https://soundcloud.com/thecquitted/sets/Hollers And Hills And Highways" ],
             { name: "Hollers And Highways", url: "https://on.soundcloud.com/8OKUIp3seJND3YqOwk" },
             { name: "Country 'Tis Of Thee", url: "https://soundcloud.com/theacquitted/sets/country-tis-of-thee" },
             { name: "We go all!", url: "https://on.soundcloud.com/0UmcD031qvw37KGJrS" },
@@ -70,8 +71,6 @@
 
         let currentIndex = 0;
         let widget = null;
-        let isShuffle = false;
-        let isRepeat = false;
 
         function loadAlbum(index) {
             currentIndex = index;
@@ -98,29 +97,9 @@
         function togglePlay() { if (widget) widget.toggle(); }
         function prev() { if (widget) widget.prev(); }
         function next() { if (widget) widget.next(); }
-        function toggleShuffle() {
-            isShuffle = !isShuffle;
-            const btn = document.querySelector("button[onclick='toggleShuffle()']");
-            if (btn) {
-                btn.style.background = isShuffle ? "#ffcc00" : "transparent";
-                btn.style.color = isShuffle ? "#000" : "#ffcc00";
-            }
-        }
-        function toggleRepeat() {
-            isRepeat = !isRepeat;
-            const btn = document.querySelector("button[onclick='toggleRepeat()']");
-            if (btn) {
-                btn.style.background = isRepeat ? "#ffcc00" : "transparent";
-                btn.style.color = isRepeat ? "#000" : "#ffcc00";
-            }
-        }
-        function shareCurrent() {
-            if (!widget) return;
-            widget.getCurrentSound((sound) => {
-                const shareUrl = sound ? sound.permalink_url : window.location.href;
-                navigator.clipboard.writeText(shareUrl).then(() => alert('Track link copied to clipboard!')).catch(() => alert('Failed to copy link: ' + shareUrl));
-            });
-        }
+        function toggleShuffle() { alert('Shuffle ON 🔥'); }
+        function toggleRepeat() { alert('Repeat toggled'); }
+        function shareCurrent() { navigator.clipboard.writeText(window.location.href); alert('Link copied!'); }
 
         window.onload = () => {
             if (playlists.length > 0) loadAlbum(0);
