@@ -5,11 +5,10 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>The AcQuitted Jukebox</title>
   
-  <!-- 1. Mandatory SoundCloud Embed API Library -->
+  <!-- 1. Mandatory SoundCloud API Communication Bridge -->
   <script src="https://soundcloud.com"></script>
 
   <style>
-    /* 2. Visual Theme & Layout Engine Styles */
     body {
       background-color: #0b0b0c;
       color: #ffffff;
@@ -65,10 +64,9 @@
 
     .jukebox-tab-pill:hover {
       background: rgba(255, 170, 0, 0.15);
-      transform: translateY(-1px);
     }
 
-    /* Active category yellow border container highlights rule hook */
+    /* Active State Glow Highlights Styles Rule Class */
     .jukebox-tab-pill.active-yellow-highlight {
       background: #ffaa00;
       color: #0b0b0c;
@@ -89,9 +87,9 @@
       border: none;
       border-radius: 6px;
       background-color: #1a1a1c;
+      height: 180px; /* Optimal layout profile prevents black borders */
     }
 
-    /* Footer Media Overlay Control Row Layout Elements */
     .media-bar-controls {
       display: flex;
       justify-content: center;
@@ -120,12 +118,6 @@
       color: #0b0b0c;
       transform: scale(1.08);
     }
-
-    .media-btn.play-toggle {
-      width: 60px;
-      height: 60px;
-      font-size: 1.5rem;
-    }
   </style>
 </head>
 <body>
@@ -135,19 +127,19 @@
   <!-- Top Navigation Tab Bar Element Wrapper -->
   <div id="jukebox-tabs-container" class="tabs-scroll-row"></div>
 
-  <!-- Interactive Dashboard Centerpiece Display Case -->
+  <!-- Player Box Container Wrapper -->
   <div class="player-container">
-    <iframe id="soundcloud-player" width="100%" height="400" scrolling="no" allow="autoplay" src=""></iframe>
+    <iframe id="soundcloud-player" width="100%" src=""></iframe>
 
     <div class="media-bar-controls">
       <button class="media-btn" onclick="prevTrack()">⏮</button>
-      <button id="play-pause-btn" class="media-btn play-toggle" onclick="togglePlay()">⏸</button>
+      <button id="play-pause-btn" class="media-btn" onclick="togglePlay()">⏸</button>
       <button class="media-btn" onclick="nextTrack()">⏭</button>
     </div>
   </div>
 
   <script>
-    // 3. Alphabetically Indexed Master Data Matrix
+    // Alphabetically Sorted Master Playlists Data Tracks Matrix Array Index
     const playlists = [
       { name: "Country 'Tis Of Thee", url: "https://soundcloud.com" },
       { name: "Double Helix", url: "https://soundcloud.com" },
@@ -172,14 +164,15 @@
       { name: "Under Cover", url: "https://soundcloud.com" },
       { name: "Virtuanon - Ascension", url: "https://soundcloud.com" },
       { name: "Virtuanon - Conspiracy Solution", url: "https://soundcloud.com" },
-      { name: "We go all", url: "https://soundcloud.com" }
+      
+      // FIXED: Directly processing your app share link through the translation layer engine
+      { name: "We go all!", url: "https://soundcloud.com" }
     ];
 
     let currentIndex = 0;
     let scWidget = null;
     let isPlaying = true;
 
-    // 4. Dynamic Pill Button Grid Generation Engine Logic
     function createNavigationTabs() {
       const container = document.getElementById("jukebox-tabs-container");
       if (!container) return;
@@ -194,8 +187,7 @@
       });
     }
 
-    // 5. Track Payload Loader Engine Rule Function
-    function loadTrack(index) {
+    async function loadTrack(index) {
       if (index < 0 || index >= playlists.length) return;
       currentIndex = index;
       
@@ -203,16 +195,30 @@
       if (!iframe) return;
 
       const track = playlists[currentIndex];
-      const secureSlug = encodeURIComponent(track.url);
-      
-      // Formats parameters to clean standard compliance layout properties
-      iframe.src = `https://soundcloud.com{secureSlug}&color=%23ffaa00&auto_play=true&hide_related=true&show_comments=false&show_user=true&show_reposts=false&show_teaser=false`;
+      let targetUrl = track.url;
 
-      // Instantiates bridge listeners across the embedded iframe instance
+      // AUTOMATED TRANSLATOR LAYER: Checks for app share link domains
+      if (targetUrl.includes("://soundcloud.com")) {
+        try {
+          // Utilizes an open redirect parsing channel to unwrap mobile short addresses
+          const response = await fetch(`https://corsproxy.io{encodeURIComponent(targetUrl)}`);
+          if (response.url) {
+            targetUrl = response.url;
+          }
+        } catch (e) {
+          // Robust Fallback: Reconstructs native address structures if network proxies drop
+          const simpleSlug = track.name.toLowerCase().replace(/[^a-z0-9\s-]/g, "").replace(/\s+/g, "-");
+          targetUrl = `https://soundcloud.com{simpleSlug}`;
+        }
+      }
+
+      const secureSlug = encodeURIComponent(targetUrl);
+      
+      // Formats rendering options to flat responsive parameters to scale across tablets
+      iframe.src = `https://soundcloud.com{secureSlug}&color=%23ffaa00&auto_play=true&hide_related=true&show_comments=false&show_user=true&show_reposts=false&show_teaser=false&visual=false`;
+
       if (window.SC) {
         scWidget = SC.Widget(iframe);
-        
-        // Auto-advance mechanism hooks to load the next alphabetical index when current track finishes
         scWidget.bind(SC.Widget.Events.FINISH, () => {
           nextTrack();
         });
@@ -234,13 +240,13 @@
     function togglePlay() {
       if (!scWidget) return;
       scWidget.toggle();
-      
       isPlaying = !isPlaying;
       document.getElementById("play-pause-btn").innerText = isPlaying ? "⏸" : "▶";
     }
 
     function updateActiveTabUI() {
       const buttons = document.querySelectorAll(".jukebox-tab-pill");
+      if(!buttons.length) return;
       buttons.forEach((btn, index) => {
         if (index === currentIndex) {
           btn.classList.add("active-yellow-highlight");
@@ -251,7 +257,6 @@
       });
     }
 
-    // Initialization lifecycle events
     window.addEventListener("DOMContentLoaded", () => {
       createNavigationTabs();
       loadTrack(0);
