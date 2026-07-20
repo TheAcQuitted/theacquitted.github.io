@@ -7,14 +7,13 @@
     <script src="https://w.soundcloud.com/player/api.js" defer></script>
     <style>
         body { margin:0; padding:10px; font-family:system-ui; background:#111; color:#fff; text-align:center; }
-        .header-img { width:100%; max-height:200px; object-fit:cover; border-radius:8px; }
         h1 { color:#ff4500; text-shadow:0 0 15px #ffcc00; margin:10px 0 5px; font-size:1.8em; }
         .album-nav { display:flex; overflow-x:auto; gap:10px; padding:10px 0; scrollbar-width:none; }
         .album-nav::-webkit-scrollbar { display:none; }
         .nav-btn { padding:10px 20px; border:2px solid #ffcc00; background:transparent; color:#ffcc00; border-radius:30px; white-space:nowrap; flex-shrink:0; cursor:pointer; }
         .nav-btn.active { background:#ffcc00; color:#000; }
         .player-container { max-width:620px; margin:15px auto; background:#1a1a1a; border:3px solid #ffcc00; border-radius:12px; padding:15px; }
-        iframe { width:100%; height:420px; border:none; border-radius:8px; }
+        iframe { width:100%; height:520px; border:none; border-radius:8px; }
         .controls { display:flex; justify-content:center; gap:20px; margin:20px 0; }
         .btn { width:70px; height:70px; border:3px solid #ffcc00; background:transparent; color:#ffcc00; border-radius:12px; font-size:28px; cursor:pointer; }
         .action-row { display:flex; justify-content:center; gap:12px; flex-wrap:wrap; margin:15px 0; }
@@ -22,7 +21,6 @@
     </style>
 </head>
 <body>
-
     <h1>THE ACQUITTED JUKEBOX</h1>
 
     <div class="album-nav" id="album-nav"></div>
@@ -47,38 +45,11 @@
     </div>
 
     <script>
-        // === ADD NEW PLAYLISTS HERE (one line per album) ===
+        // === ADD ALL YOUR PLAYLISTS HERE (one line per album) ===
         const playlists = [
             { name: "Red Rock Prayer", url: "https://soundcloud.com/theacquitted/red-rock-prayer" },
-            { name: "One Nation", url: "https://on.soundcloud.com/gRq62G85tVEJ6VAAiO" },
             { name: "Double Helix", url: "https://soundcloud.com/theacquitted/sets/double-helix" },
-            { name: "Temporal Balance", url: "https://on.soundcloud.com/JtCp9lBGQyAL6PyWf9" },
-            { name: "Double Helix", url: "https://soundcloud.com/theacquitted/sets/double-helix" },
-            { name: "Double Helix", url: "https://soundcloud.com/theacquitted/sets/double-helix" },
-            { name: "Double Helix", url: "https://soundcloud.com/theacquitted/sets/double-helix" },  
-            { name: "Double Helix", url: "https://soundcloud.com/theacquitted/sets/double-helix" },
-            { name: "Double Helix", url: "https://soundcloud.com/theacquitted/sets/double-helix" },
-            { name: "Double Helix", url: "https://soundcloud.com/theacquitted/sets/double-helix" },
-            { name: "Double Helix", url: "https://soundcloud.com/theacquitted/sets/double-helix" },
-            { name: "Double Helix", url: "https://soundcloud.com/theacquitted/sets/double-helix" },
-            { name: "Double Helix", url: "https://soundcloud.com/theacquitted/sets/double-helix" },
-            { name: "Double Helix", url: "https://soundcloud.com/theacquitted/sets/double-helix" },  
-            { name: "Double Helix", url: "https://soundcloud.com/theacquitted/sets/double-helix" },
-            { name: "Double Helix", url: "https://soundcloud.com/theacquitted/sets/double-helix" },
-            { name: "Double Helix", url: "https://soundcloud.com/theacquitted/sets/double-helix" },
-            { name: "Double Helix", url: "https://soundcloud.com/theacquitted/sets/double-helix" },
-            { name: "Double Helix", url: "https://soundcloud.com/theacquitted/sets/double-helix" },
-            { name: "Double Helix", url: "https://soundcloud.com/theacquitted/sets/double-helix" },
-            { name: "Double Helix", url: "https://soundcloud.com/theacquitted/sets/double-helix" },  
-            { name: "Double Helix", url: "https://soundcloud.com/theacquitted/sets/double-helix" },
-
-
-
-            
-
-
             // Add the rest of your albums here — they will slide automatically
-            // Example: { name: "New Album", url: "https://soundcloud.com/theacquitted/sets/new-set" },
         ];
 
         let currentIndex = 0;
