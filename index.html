@@ -45,48 +45,17 @@
     </div>
 
     <script>
-        // === ADD ALL YOUR PLAYLISTS HERE (one line per album) ===
+        // === ALL YOUR PLAYLISTS ===
         const playlists = [
-            { name: "Red Rock Prayer", url: "https://soundcloud.com/theacquitted/red-rock-prayer" },
-            { name: "Double Helix", url: "https://soundcloud.com/theacquitted/sets/double-helix" },
-            // Add the rest of your albums here — they will slide automatically
-        ];
-
-        let currentIndex = 0;
-        let widget = null;
-
-        function loadAlbum(index) {
-            currentIndex = index;
-            const album = playlists[index];
-            const iframe = document.getElementById('soundcloud-player');
-            iframe.src = `https://w.soundcloud.com/player/?url=${encodeURIComponent(album.url)}&color=%23ffcc00&auto_play=false&visual=true&show_comments=true`;
-            setTimeout(() => widget = SC.Widget(iframe), 400);
-            updateNav();
-        }
-
-        function updateNav() {
-            const nav = document.getElementById('album-nav');
-            nav.innerHTML = '';
-            playlists.forEach((album, i) => {
-                const btn = document.createElement('button');
-                btn.className = 'nav-btn';
-                btn.textContent = album.name;
-                btn.onclick = () => loadAlbum(i);
-                if (i === currentIndex) btn.classList.add('active');
-                nav.appendChild(btn);
-            });
-        }
-
-        function togglePlay() { if (widget) widget.toggle(); }
-        function prev() { if (widget) widget.prev(); }
-        function next() { if (widget) widget.next(); }
-        function toggleShuffle() { alert('Shuffle ON 🔥'); }
-        function toggleRepeat() { alert('Repeat toggled'); }
-        function shareCurrent() { navigator.clipboard.writeText(window.location.href); alert('Link copied!'); }
-
-        window.onload = () => {
-            if (playlists.length > 0) loadAlbum(0);
-        };
-    </script>
-</body>
-</html>
+            { name: "States Of Mind", url: "https://soundcloud.com/theacquitted/sets/states-of-mind" },
+            { name: "Sweetleaf Of Mary", url: "https://soundcloud.com/theacquitted/sets/sweetleaf-of-mary" },
+            { name: "Under Cover", url: "https://soundcloud.com/theacquitted/sets/under-cover" },
+            { name: "Three Seventy Nine", url: "https://soundcloud.com/theacquitted/sets/three-seventy-nine" },
+            { name: "Shiners Moon", url: "https://soundcloud.com/theacquitted/sets/shiners-moon" },
+            { name: "Hollers And Highways", url: "https://soundcloud.com/theacquitted/sets/hollers-and-highways" },
+            { name: "Country 'Tis Of Thee", url: "https://soundcloud.com/theacquitted/sets/country-tis-of-thee" },
+            { name: "We go all!", url: "https://soundcloud.com/theacquitted/sets/we-go-all" },
+            { name: "The Road Is My Home", url: "https://soundcloud.com/theacquitted/sets/the-road-is-my-home" },
+            { name: "One Nation", url: "https://soundcloud.com/theacquitted/sets/the-acquitted-one-nation" },
+            { name: "Temporal Balance", url: "https://soundcloud.com/theacquitted/sets/temporal-balance" },
+            { name:
